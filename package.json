@@ -1,0 +1,45 @@
+{
+  "name": "@ads/gendoc",
+  "version": "1.0.0",
+  "description": "通用注释转markdown文档生成器,目标是支持所有类型的文件",
+  "main": "lib",
+  "types": "lib/types",
+
+  "scripts": {
+    "build":"node gulpfile.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://gitee.com/agile-development-system/gendoc.git"
+  },
+  "keywords": [
+    "jsdoc",
+    "vuedoc",
+    "reactdoc",
+    "markdown",
+    "md"
+  ],
+  "author": "junyang",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.13.15",
+    "@babel/eslint-parser": "^7.13.14",
+    "@babel/plugin-proposal-class-properties": "^7.13.0",
+    "@babel/plugin-proposal-decorators": "^7.13.15",
+    "@babel/plugin-transform-modules-commonjs": "^7.13.8",
+    "@babel/preset-env": "^7.13.15",
+    "eslint": "^7.24.0",
+    "eslint-config-standard": "^16.0.2",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.3.1",
+    "gulp": "^4.0.2",
+    "gulp-babel": "^8.0.0",
+    "gulp-clean": "^0.4.0",
+    "gulp-typescript": "^6.0.0-alpha.1",
+    "merge2": "^1.4.1",
+    "rimraf": "^3.0.2",
+    "typescript": "^4.2.4"
+  }
+}

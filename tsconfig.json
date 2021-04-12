@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "target": "ES6",
+        "module": "commonjs",
+        "allowJs": true,
+        "declaration": true,
+        "allowSyntheticDefaultImports": true,
+        "baseUrl": ".",
+        "moduleResolution": "node",
+        "experimentalDecorators": true,
+        "esModuleInterop": true,
+        "declarationDir": "lib/type",
+        "outDir": "lib"
+    },
+    "include": ["./src"],
+}
