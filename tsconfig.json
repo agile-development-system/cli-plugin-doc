@@ -1,16 +1,10 @@
 {
     "compilerOptions": {
-        "target": "ES6",
-        "module": "commonjs",
         "allowJs": true,
         "declaration": true,
-        "allowSyntheticDefaultImports": true,
-        "baseUrl": ".",
-        "moduleResolution": "node",
-        "experimentalDecorators": true,
-        "esModuleInterop": true,
-        "declarationDir": "lib/type",
-        "outDir": "lib"
+        "declarationDir": "lib/types",
+        "outDir": "lib",
+        "target": "ES2017"
     },
     "include": ["./src"],
 }

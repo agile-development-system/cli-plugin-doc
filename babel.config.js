@@ -9,7 +9,7 @@ module.exports = function (api) {
             '@babel/preset-env',
             {
                 targets: {
-                    node: 'current',
+                    node: '12',
                 },
             },
         ],
@@ -19,6 +19,8 @@ module.exports = function (api) {
         ['@babel/plugin-proposal-decorators', { legacy: true }],
         ['@babel/plugin-proposal-class-properties', { loose: true }],
         ['@babel/plugin-transform-modules-commonjs'],
+        ['@babel/plugin-proposal-nullish-coalescing-operator'],
+        ['@babel/plugin-proposal-optional-chaining'],
     ];
 
     return {
