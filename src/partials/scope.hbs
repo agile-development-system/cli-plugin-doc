@@ -1,0 +1,10 @@
+{{#if scope}}
+**性质**: {{#if (equal kind "event") ~}}
+event emitted{{#if memberof}} by {{>link to=memberof}}{{/if}}
+{{else~}}
+{{#if virtual}}abstract {{/if}}{{#if memberof}}{{>link to=memberof}}的{{/if}}{{scopeInThisContext}}{{kindInThisContext}}
+{{/if~}}
+{{else~}}
+{{#if isExported}}**Kind**: Exported {{kind}}
+{{/if~}}
+{{/if~}}

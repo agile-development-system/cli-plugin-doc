@@ -12,7 +12,7 @@ function clean(cb) {
     rimraf('lib', cb);
 }
 function build(cb) {
-    const tsResult = src('src/**/*')
+    const tsResult = src('src/**/*.[tj]s')
         .pipe(tsProject());
 
     merge([
@@ -22,5 +22,11 @@ function build(cb) {
     cb();
 }
 
-const doit = series(clean, build);
+function cp(cb) {
+    src('src/template/*').pipe(dest('lib/template'));
+    cb();
+}
+
+const doit = series(clean, build, cp);
 doit();
+exports.default = doit;

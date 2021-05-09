@@ -6,6 +6,10 @@ module.exports = {
     },
     extends: [
         'standard',
+        'plugin:jsdoc/recommended',
+    ],
+    plugins: [
+        'jsdoc',
     ],
     parser: '@babel/eslint-parser',
     parserOptions: {
@@ -22,5 +26,14 @@ module.exports = {
             'error',
             { anonymous: 'always', named: 'never', asyncArrow: 'always' },
         ],
+        // jsdoc
+        'valid-jsdoc': 'off',
+        'jsdoc/require-property': 0,
+        'jsdoc/require-returns-description': 0,
+    },
+    settings: {
+        jsdoc: {
+            mode: 'typescript',
+        },
     },
 };
