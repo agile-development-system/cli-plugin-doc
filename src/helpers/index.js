@@ -24,14 +24,14 @@ exports.kindInThisContext = function kindInThisContext(options) {
         return '枚举';
     } else if (this.kind === 'member' && this.scope === 'global') {
         return '变量';
-    } else if (this.kind === 'typedef' && this.scope === 'global') {
+    } else if (this.kind === 'typedef') {
         return '类型声明';
     } else if (this.kind === 'class' && this.scope === 'global') {
         return '类';
     } else if (this.kind === 'function' && this.scope === 'global') {
         return '函数';
-    } else if (this.kind === 'innertypedef') {
-        return '内部类型声明';
+    } else if (this.kind === 'constant' && this.scope === 'global') {
+        return '常量';
     } else {
         return this.kind;
     }
@@ -43,6 +43,8 @@ exports.scopeInThisContext = function () {
             return '';
         case 'static':
             return '静态';
+        case 'inner':
+            return '内部';
         default:
             return this.scope;
     }

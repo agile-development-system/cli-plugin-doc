@@ -15,6 +15,7 @@ export function sayHello(somebody) {
 
 /**
  * Returns the sum of all numbers passed to the function.
+ *
  * @param {...number} num - A positive or negative number.
  */
 export function sum() {
@@ -36,6 +37,7 @@ export function sum() {
 
 /**
  * Does something asynchronously and executes the callback on completion.
+ *
  * @param {requestCallback} cb - The callback that handles the response.
  */
 export function doSomethingAsynchronously(cb) {
@@ -48,7 +50,7 @@ export function doSomethingAsynchronously(cb) {
  * @param {string=} p2 - An optional param
  * @param {string} [p3] - Another optional param.
  * @param {string} [p4=test] - An optional param with a default value
- * @return {string} This is the result
+ * @returns {string} This is the result
  */
 function fn3(p0, p1, p2, p3, p4) {
     return 'a';
@@ -62,7 +64,7 @@ class A {
      * @param {string=} p2 - An optional param
      * @param {string} [p3] - Another optional param.
      * @param {string} [p4=test] - An optional param with a default value
-     * @return {string} This is the result
+     * @returns {string} This is the result
      */
     static fn() {
         return 'a';
@@ -72,11 +74,14 @@ class A {
 /**
  * See {@link MyClass} and [MyClass's foo property]{@link MyClass#foo}.
  * Also, check out {@link http://www.google.com|Google} and
+ *
+ * @param p
  */
 function myFunction(p) {}
 
 /**
  * Both of these will link to the bar function.
+ *
  * @see {@link bar}
  * @see bar
  */
@@ -84,28 +89,32 @@ function foo() {}
 
 // Use the inline {@link} tag to include a link within a free-form description.
 /**
-  * @see {@link foo} for further information.
-  * @see {@link http://github.com|GitHub}
-  */
+ * @see {@link foo} for further information.
+ * @see {@link http://github.com|GitHub}
+ */
 function bar() {}
 
 /**
  * The jQuery plugin namespace.
+ *
  * @external "jQuery.fn"
  * @see {@link http://learn.jquery.com/plugins/|jQuery Plugins}
  */
 
 /**
  * A jQuery plugin to make stars fly around your home page.
+ *
  * @function external:"jQuery.fn".starfairy
  */
 
 /**
  * Solves equations of the form a * x = b
+ *
+ * @param params
  * @example <caption>Example usage of method1.</caption>
  * // returns 2
  * globalNS.method1(5, 10);
- * @returns {Number} Returns the value of x for the equation.
+ * @returns {number} Returns the value of x for the equation.
  */
 function method1(params) {
 
@@ -113,6 +122,7 @@ function method1(params) {
 
 /**
  * The complete Triforce, or one or more components of the Triforce.
+ *
  * @typedef {Object} WishGranter~Triforce
  * @property {boolean} hasCourage - Indicates whether the Courage component is present.
  * @property {boolean} hasPower - Indicates whether the Power component is present.
@@ -121,6 +131,7 @@ function method1(params) {
 
 /**
  * A class for granting wishes, powered by the Triforce.
+ *
  * @class
  * @param {...WishGranter~Triforce} triforce - One to three {@link WishGranter~Triforce} objects
  * containing all three components of the Triforce.

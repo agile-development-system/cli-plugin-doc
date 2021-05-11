@@ -5,11 +5,11 @@ const defaultConfig = require('./utils/config');
 const path = require('path');
 const merge = require('lodash.merge');
 const fs = require('fs-extra');
-const { FastFs, FastPath } = require('@ads/node-utils');
+const { FastFs, FastPath, PresetUtils } = require('@ads/node-utils');
 /**
  * GenDoc 基于注释和可运行的示例代码自动生成文档的强大工具类
  *
- * ### 引入
+ * #### 引入
  * ```js
  * const GenDoc = require('@ads/cli-plugin-doc');
  * ```
@@ -20,11 +20,12 @@ module.exports = class GenDoc {
     /**
      * 基于ejs，用模板渲染文档
      *
-     * @param {RenderObtions} options 获取用来渲染模板的数据
+     * @param {RenderOptions} options 获取用来渲染模板的数据
      * @returns {Promise<string>} 异步返回基于ejs模板渲染的文档文本
      */
     static async render(options) {
-        const config = this._mergeToDefaultConfig(options);
+        let config = await this._mergeToDefaultConfig(options);
+        config = config.modify ? config.modify(config) : config;
         const renderData = await this.getRenderData(config);
         return ejs.renderFile(config.template, renderData);
     }
@@ -32,18 +33,18 @@ module.exports = class GenDoc {
     /**
      * 将当前配置和默认配置合并
      *
-     * @param {RenderObtions} options 获取用来渲染模板的数据
-     * @returns {RenderObtions} 异步返回基于ejs模板渲染的文档文本
+     * @param {RenderOptions} options 获取用来渲染模板的数据
+     * @returns {RenderOptions} 异步返回基于ejs模板渲染的文档文本
      * @ignore
      */
-    static _mergeToDefaultConfig(options) {
-        return merge({}, defaultConfig, options);
+    static async _mergeToDefaultConfig(options) {
+        return merge({}, defaultConfig, await PresetUtils.getDeepPresetMerge(options));
     }
 
     /**
      * 获取用来渲染模板的数据（jsdoc生成的文档和示例代码的内容）
      *
-     * @param {RenderObtions} options 配置参数
+     * @param {RenderOptions} options 配置参数
      * @returns {Promise<GetRenderDataResult>}
      */
     static async getRenderData({ Jsdoc2mdOptions, codesOptions, helpers }) {
@@ -70,7 +71,7 @@ module.exports = class GenDoc {
      * 以文件夹为单位返回文件内容对象，key是文件的extname
      *
      * @param {import('./utils/getFilesPath').GetFilesCodeOptions} options 获取源代码的文件路径配置参数
-     * @returns {Promise<GetFilesCodeResult[]>}
+     * @returns {Promise<Array<GetFilesCodeResult>>}
      */
     static async getFilesCode(options) {
         const filesList = getFilesPath(options);
@@ -98,9 +99,23 @@ module.exports = class GenDoc {
 /**
  * 渲染函数的配置参数
  *
- * @typedef {object} RenderObtions
+ * @typedef {object} RenderOptions
+ * @property {string} template ejs渲染的模板相对于cwd的路径或者绝对路径
  * @property {import('./utils/jsdocRender').Jsdoc2mdOptions} Jsdoc2mdOptions jsdocToMarkdown配置参数
  * @property {import('./utils/getFilesPath').GetFilesCodeOptions} codesOptions 获取源代码的文件路径配置参数
+ * @property {object} jsdocEngineOption jsdoc解析引擎的配置，实际上是`jsdoc.conf.js`的整合，
+ * 也可以使用  `RenderOptions.Jsdoc2mdOptions.configure`字段来指定本地的jsdoc配置
+ * 配置选项[👉参考文档](https://jsdoc.app/about-configuring-jsdoc.html)
+ * @property {object} helpers 注入ejs模板的`helpers`对象，提供模板使用的帮助函数和变量
+ * @property {RenderOptions[]} presets 基于preset机制实现配置支持预设的功能，
+ * 具体[👉参考文档](https://gitee.com/agile-development-system/node-utils#presetutilsgetdeeppresetmergeconfig--config)`PresetUtils.getDeepPresetMerge`
+ * @property {RenderOptionsModify} modify 将默认配置和preset合并后生成的config再次处理的钩子
+ */
+
+/**
+ * @callback RenderOptionsModify
+ * @param {RenderOptions} config 将默认配置和preset合并后生成的config
+ * @returns {RenderOptions}
  */
 
 /**
@@ -116,8 +131,15 @@ module.exports = class GenDoc {
             files: ['./src/**/*.js'],
             configure: './jsdoc.conf.js',
         },
+        jsdocEngineOption: {
+            plugins: [
+                require.resolve('jsdoc-tsimport-plugin'),
+            ],
+        },
         helpers: {
             template: await module.exports.getFilesCode({ dir: './src/template', files: ['*'] }),
+            defaultConfig: await module.exports.getFilesCode({ dir: './src/utils', files: ['config.js'] }),
+            dirname: path.join(__dirname, './utils'),
         },
         // codesOptions: { dir: './src/template', files: ['*'] },
     }).then(res => console.log(res));
