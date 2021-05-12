@@ -1,4 +1,5 @@
 {
+    // 编译选项
     "compilerOptions": {
         "allowJs": true,
         "declaration": true,

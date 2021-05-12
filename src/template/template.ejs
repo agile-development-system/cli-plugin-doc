@@ -24,7 +24,10 @@ npm i <%- pkg.name %>
 <% } %><% if(codes&&codes.length) { %>
 
 ## 代码演示
-<%- helpers.renderCode&&helpers.renderCode(codes) %>
+<%-
+    helpers.renderCode
+        &&helpers.renderCode(codes, helpers.extSort, helpers.extTrans)
+%>
 <% } %><% if(docs) { %>
 
 ## API文档

@@ -24,37 +24,37 @@ module.exports = class GenDoc {
      * @returns {Promise<string>} 异步返回基于ejs模板渲染的文档文本
      */
     static async render(options) {
-        let config = await this._mergeToDefaultConfig(options);
-        config = config.modify ? config.modify(config) : config;
-        const renderData = await this.getRenderData(config);
-        return ejs.renderFile(config.template, renderData);
-    }
-
-    /**
-     * 将当前配置和默认配置合并
-     *
-     * @param {RenderOptions} options 获取用来渲染模板的数据
-     * @returns {RenderOptions} 异步返回基于ejs模板渲染的文档文本
-     * @ignore
-     */
-    static async _mergeToDefaultConfig(options) {
-        return merge({}, defaultConfig, await PresetUtils.getDeepPresetMerge(options));
+        const config = await _mergeToDefaultConfig(options);
+        const renderData = await this.getRenderData(config, false);
+        const res = await ejs.renderFile(config.template, renderData);
+        if (config.output) {
+            await FastFs.writeFile(FastPath.getCwdPath(config.output), res);
+        } else {
+            return res;
+        }
     }
 
     /**
      * 获取用来渲染模板的数据（jsdoc生成的文档和示例代码的内容）
      *
      * @param {RenderOptions} options 配置参数
+     * @param {boolean} [needMergeConfig=true] 是否需要调用`needMergeConfig`，
+     * options已经是merge处理过的就不需要调用
      * @returns {Promise<GetRenderDataResult>}
      */
-    static async getRenderData({ Jsdoc2mdOptions, codesOptions, helpers }) {
+    static async getRenderData(options, needMergeConfig = true) {
+        if (needMergeConfig) {
+            options = await _mergeToDefaultConfig(options);
+        }
+        const { jsdoc2mdOptions, codesOptions, helpers } = options;
+        console.log(options);
         const promises = [];
         let docs;
-        if (Jsdoc2mdOptions) {
-            promises.push(jsdocRender(Jsdoc2mdOptions).then(res => { docs = res; }));
+        if (jsdoc2mdOptions) {
+            promises.push(jsdocRender(jsdoc2mdOptions).then(res => { docs = res; }));
         }
         let codes;
-        if (codesOptions) {
+        if (JSON.stringify(codesOptions) !== '{}') {
             promises.push(this.getFilesCode(codesOptions).then(res => { codes = res; }));
         }
         let pkg;
@@ -89,6 +89,44 @@ module.exports = class GenDoc {
 };
 
 /**
+ * 将当前配置和默认配置合并
+ *
+ * @param {RenderOptions} options 获取用来渲染模板的数据
+ * @returns {RenderOptions} 异步返回基于ejs模板渲染的文档文本
+ * @ignore
+ */
+async function _mergeToDefaultConfig(options = {}) {
+    // 获取用户本地配置文件
+    if (options.config) {
+        const cwdConfPath = FastPath.getCwdPath(options.config || 'ads.doc.config.js');
+        if (FastFs.getPathStatSync(cwdConfPath)) {
+            const userConfig = require(cwdConfPath);
+            options.presets = options.presets || [];
+            options.presets.unshift(userConfig);
+        }
+    }
+    let config = merge({ jsdoc2mdOptions: {}, codesOptions: {}, jsdocEngineOptions: {} }, defaultConfig, await PresetUtils.getDeepPresetMerge(options));
+    // files别名支持
+    if (config.files) {
+        config.jsdoc2mdOptions.files = config.files;
+    }
+    // codesDir&codesFiles别名支持
+    if (config.codesDir && config.codesFiles) {
+        config.codesOptions.dir = config.codesDir;
+        config.codesOptions.files = config.codesFiles;
+    }
+    // jsdocEngineOptions配置支持
+    if (JSON.stringify(config.jsdocEngineOptions) !== '{}') {
+        const jsdocEngineConfigPath = path.join(__dirname, '../.temp/jsdoc.conf.json');
+        await FastFs.writeJsonFormat(jsdocEngineConfigPath, config.jsdocEngineOptions);
+        config.jsdoc2mdOptions.configure = jsdocEngineConfigPath;
+    }
+    // modify函数支持
+    config = config.modify ? config.modify(config) : config;
+    return config;
+}
+
+/**
  * 函数[getRenderData]{@link getRenderData}的返回值
  *
  * @typedef {object} GetRenderDataResult
@@ -100,11 +138,15 @@ module.exports = class GenDoc {
  * 渲染函数的配置参数
  *
  * @typedef {object} RenderOptions
+ * @property {string[]} files `jsdoc2mdOptions.files`的别名
+ * @property {string} codesDir `codesOptions.dir`的别名
+ * @property {string[]} codesFiles `codesOptions.codesFiles`的别名
  * @property {string} template ejs渲染的模板相对于cwd的路径或者绝对路径
- * @property {import('./utils/jsdocRender').Jsdoc2mdOptions} Jsdoc2mdOptions jsdocToMarkdown配置参数
+ * @property {fs.PathLike} conifg 配置文件路径，默认为运行目录下的`ads.doc.config.js`,仅支持`js`文件类型
+ * @property {import('./utils/jsdocRender').Jsdoc2mdOptions} jsdoc2mdOptions jsdocToMarkdown配置参数
  * @property {import('./utils/getFilesPath').GetFilesCodeOptions} codesOptions 获取源代码的文件路径配置参数
- * @property {object} jsdocEngineOption jsdoc解析引擎的配置，实际上是`jsdoc.conf.js`的整合，
- * 也可以使用  `RenderOptions.Jsdoc2mdOptions.configure`字段来指定本地的jsdoc配置
+ * @property {object} jsdocEngineOptions jsdoc解析引擎的配置，实际上是`jsdoc.conf.js`的整合，
+ * 也可以使用  `RenderOptions.jsdoc2mdOptions.configure`字段来指定本地的jsdoc配置
  * 配置选项[👉参考文档](https://jsdoc.app/about-configuring-jsdoc.html)
  * @property {object} helpers 注入ejs模板的`helpers`对象，提供模板使用的帮助函数和变量
  * @property {RenderOptions[]} presets 基于preset机制实现配置支持预设的功能，
@@ -126,21 +168,19 @@ module.exports = class GenDoc {
 
 (async () => {
     module.exports.render({
+        files: ['./src/**/*.js'],
+        codesDir: './exa',
+        codesFiles: ['*'],
         template: './template.ejs',
-        Jsdoc2mdOptions: {
-            files: ['./src/**/*.js'],
-            configure: './jsdoc.conf.js',
-        },
-        jsdocEngineOption: {
-            plugins: [
-                require.resolve('jsdoc-tsimport-plugin'),
-            ],
+        config: './ads.doc.conf.js',
+        jsdoc2mdOptions: {
+            // files: ['./src/**/*.js'],
         },
         helpers: {
             template: await module.exports.getFilesCode({ dir: './src/template', files: ['*'] }),
             defaultConfig: await module.exports.getFilesCode({ dir: './src/utils', files: ['config.js'] }),
             dirname: path.join(__dirname, './utils'),
         },
-        // codesOptions: { dir: './src/template', files: ['*'] },
+        // codesOptions: { dir: './exa', files: ['*'] },
     }).then(res => console.log(res));
 })();
