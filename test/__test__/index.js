@@ -1,0 +1,42 @@
+const { expect, test } = require('@jest/globals');
+const GenDoc = require('@ads/cli-plugin-doc');
+const config = require('../__mock__/index'); ;
+
+test('GenDoc render', async () => {
+    const res = await GenDoc.render(await config());
+    expect(typeof res === 'string').toBe(true);
+});
+
+// 同时也会输出reademe
+test('GenDoc render output & use ads.doc.config.js', async () => {
+    const res = await GenDoc.render();
+    expect(typeof res === 'undefined').toBe(true);
+});
+
+test('GenDoc render no files', async () => {
+    const res = await GenDoc.render(await config({ noFiles: true }));
+    expect(typeof res === 'string').toBe(true);
+});
+
+test('GenDoc render no codes', async () => {
+    const res = await GenDoc.render(await config({ noCodes: true }));
+    expect(typeof res === 'string').toBe(true);
+});
+
+test('GenDoc render error', async () => {
+    try {
+        await GenDoc.render(await config({ needDirError: true }));
+    } catch (error) {
+        expect(error.message).toMatch('未匹配到任何目录，请确认输入路径');
+    }
+});
+
+test('GenDoc getRenderData', async () => {
+    const res = await GenDoc.getRenderData(await config({ noDefault: true }));
+    expect(typeof res === 'object').toBe(true);
+});
+
+test('GenDoc getRenderData nodefault', async () => {
+    const res = await GenDoc.getRenderData(await config(), false);
+    expect(typeof res === 'object').toBe(true);
+});

@@ -11,37 +11,86 @@ npm i @ads/cli-plugin-doc
 ```
 
 ## 代码演示
-<!--
- * @Author: 锦阳
- * @Create: 2021年05月12日
--->
-#### 测试示例
-```html
-<template>
+```js
+// ads.doc.config.js
 
-</template>
+const path = require('path');
+const GenDoc = require('@ads/cli-plugin-doc');
+/**
+ * render配置生成
+ *
+ * @param {object} [options] 选项
+ * @param {boolean} [options.needDirError] 是否需要触发文件路径错误
+ * @param {boolean} [options.noFiles] 是否需要去除files选项
+ * @param {boolean} [options.noDefault] 是否取消default配置
+ * @param {boolean} [options.noCodes] 是否去除codes相关配置
+ * @returns {import('../../src/index').RenderOptions}
+ */
+module.exports = async ({ needDirError, noFiles, noDefault, noCodes } = {}) => {
+    return {
+        files: noFiles ? null : ['./src/**/*.js'],
+        ...(noCodes
+            ? {}
+            : {
+                codesDir: needDirError ? './aaa' : './exa',
+                codesFiles: ['*'],
+            }
+        ),
+        template: './template.ejs',
+        config: './ads.doc.conf.js',
+        noDefault,
+        helpers: {
+            template: await GenDoc.getFilesCode({ dir: './src/template', files: ['*'] }),
+            defaultConfig: await GenDoc.getFilesCode({ dir: './src/utils', files: ['config.js'] }),
+            dirname: path.join(__dirname, './utils'),
+        },
+    };
+};
 
-<script>
-export default {
-
-}
-</script>
-
-<style>
-
-</style>
-```
-```jsx
-function Test(params) {
-    return <div></div>
-}
 ```
 ```js
-/*
- * @Author: 锦阳
- * @Create: 2021年05月12日
- */
-module.exports = '1000';
+const { expect, test } = require('@jest/globals');
+const GenDoc = require('@ads/cli-plugin-doc');
+const config = require('../__mock__/index'); ;
+
+test('GenDoc render', async () => {
+    const res = await GenDoc.render(await config());
+    expect(typeof res === 'string').toBe(true);
+});
+
+// 同时也会输出reademe
+test('GenDoc render output & use ads.doc.config.js', async () => {
+    const res = await GenDoc.render();
+    expect(typeof res === 'undefined').toBe(true);
+});
+
+test('GenDoc render no files', async () => {
+    const res = await GenDoc.render(await config({ noFiles: true }));
+    expect(typeof res === 'string').toBe(true);
+});
+
+test('GenDoc render no codes', async () => {
+    const res = await GenDoc.render(await config({ noCodes: true }));
+    expect(typeof res === 'string').toBe(true);
+});
+
+test('GenDoc render error', async () => {
+    try {
+        await GenDoc.render(await config({ needDirError: true }));
+    } catch (error) {
+        expect(error.message).toMatch('未匹配到任何目录，请确认输入路径');
+    }
+});
+
+test('GenDoc getRenderData', async () => {
+    const res = await GenDoc.getRenderData(await config({ noDefault: true }));
+    expect(typeof res === 'object').toBe(true);
+});
+
+test('GenDoc getRenderData nodefault', async () => {
+    const res = await GenDoc.getRenderData(await config(), false);
+    expect(typeof res === 'object').toBe(true);
+});
 
 ```
 
@@ -68,19 +117,19 @@ const GenDoc = require('@ads/cli-plugin-doc');
 
 | 参数 | 类型 | 描述 |
 | --- | --- | --- |
-| options | [<code>RenderOptions</code>](#module_GenDoc..RenderOptions) | 获取用来渲染模板的数据 |
+| options | <code>module:GenDoc~RenderOptions</code> | 获取用来渲染模板的数据 |
 
 <a name="module_GenDoc.getRenderData"></a>
 
-#### GenDoc.getRenderData(options, [needMergeConfig]) ⇒ [<code>Promise.&lt;GetRenderDataResult&gt;</code>](#module_GenDoc..GetRenderDataResult)
+#### GenDoc.getRenderData(options, [needMergeConfig]) ⇒ <code>Promise.&lt;module:GenDoc~GetRenderDataResult&gt;</code>
 获取用来渲染模板的数据（jsdoc生成的文档和示例代码的内容）
 
 **性质**: [<code>GenDoc</code>](#module_GenDoc)的静态方法
 
 | 参数 | 类型 | 默认值 | 描述 |
 | --- | --- | --- | --- |
-| options | [<code>RenderOptions</code>](#module_GenDoc..RenderOptions) |  | 配置参数 |
-| [needMergeConfig] | <code>boolean</code> | <code>true</code> | 是否需要调用`needMergeConfig`， options已经是merge处理过的就不需要调用 |
+| options | <code>module:GenDoc~RenderOptions</code> |  | 配置参数 |
+| [needMergeConfig] | <code>boolean</code> | <code>true</code> | 是否需要调用`_mergeToDefaultConfig`， options已经是merge处理过的就不需要调用,否则不推荐传入`false` 会导致别名不支持 |
 
 <a name="module_GenDoc.getFilesCode"></a>
 
@@ -94,55 +143,48 @@ const GenDoc = require('@ads/cli-plugin-doc');
 | --- | --- | --- |
 | options | [<code>GetFilesCodeOptions</code>](#GetFilesCodeOptions) | 获取源代码的文件路径配置参数 |
 
-<a name="module_GenDoc..GetRenderDataResult"></a>
+<a name="GetRenderDataResult"></a>
 
-#### GenDoc~GetRenderDataResult : <code>object</code>
+### GetRenderDataResult : <code>object</code>
 函数[getRenderData](getRenderData)的返回值
 
-**性质**: [<code>GenDoc</code>](#module_GenDoc)的内部类型声明
+**性质**: 类型声明
 **属性**
 
 | 属性 | 类型 | 描述 |
 | --- | --- | --- |
 | docs | <code>string</code> | 源码使用jsdoc渲染后的markdown文本 |
-| codes | [<code>Array.&lt;GetFilesCodeResult&gt;</code>](#module_GenDoc..GetFilesCodeResult) | 获取到的代码内容 |
+| codes | <code>Array.&lt;module:GenDoc~GetFilesCodeResult&gt;</code> | 获取到的代码内容 |
 
-<a name="module_GenDoc..RenderOptions"></a>
+<a name="RenderOptions"></a>
 
-#### GenDoc~RenderOptions : <code>object</code>
+### RenderOptions : <code>object</code>
 渲染函数的配置参数
 
-**性质**: [<code>GenDoc</code>](#module_GenDoc)的内部类型声明
+**性质**: 类型声明
 **属性**
 
-| 属性 | 类型 | 描述 |
-| --- | --- | --- |
-| files | <code>Array.&lt;string&gt;</code> | `jsdoc2mdOptions.files`的别名 |
-| codesDir | <code>string</code> | `codesOptions.dir`的别名 |
-| codesFiles | <code>Array.&lt;string&gt;</code> | `codesOptions.codesFiles`的别名 |
-| template | <code>string</code> | ejs渲染的模板相对于cwd的路径或者绝对路径 |
-| jsdoc2mdOptions | [<code>Jsdoc2mdOptions</code>](#Jsdoc2mdOptions) | jsdocToMarkdown配置参数 |
-| codesOptions | [<code>GetFilesCodeOptions</code>](#GetFilesCodeOptions) | 获取源代码的文件路径配置参数 |
-| jsdocEngineOptions | <code>object</code> | jsdoc解析引擎的配置，实际上是`jsdoc.conf.js`的整合， 也可以使用  `RenderOptions.jsdoc2mdOptions.configure`字段来指定本地的jsdoc配置 配置选项[👉参考文档](https://jsdoc.app/about-configuring-jsdoc.html) |
-| helpers | <code>object</code> | 注入ejs模板的`helpers`对象，提供模板使用的帮助函数和变量 |
-| presets | [<code>Array.&lt;RenderOptions&gt;</code>](#module_GenDoc..RenderOptions) | 基于preset机制实现配置支持预设的功能， 具体[👉参考文档](https://gitee.com/agile-development-system/node-utils#presetutilsgetdeeppresetmergeconfig--config)`PresetUtils.getDeepPresetMerge` |
-| modify | <code>RenderOptionsModify</code> | 将默认配置和preset合并后生成的config再次处理的钩子 |
+| 属性 | 类型 | 默认值 | 描述 |
+| --- | --- | --- | --- |
+| files | <code>Array.&lt;string&gt;</code> |  | `jsdoc2mdOptions.files`的别名 |
+| template | <code>string</code> |  | ejs渲染的模板相对于cwd的路径或者绝对路径 |
+| [codesDir] | <code>string</code> |  | `codesOptions.dir`的别名 |
+| [codesFiles] | <code>Array.&lt;string&gt;</code> |  | `codesOptions.codesFiles`的别名 |
+| [conifg] | <code>fs.PathLike</code> | <code>ads.doc.config.js</code> | 配置文件路径，默认为运行目录下的`ads.doc.config.js`,仅支持`js`文件类型 |
+| [jsdoc2mdOptions] | [<code>Jsdoc2mdOptions</code>](#Jsdoc2mdOptions) |  | jsdocToMarkdown配置参数 |
+| [codesOptions] | [<code>GetFilesCodeOptions</code>](#GetFilesCodeOptions) |  | 获取源代码的文件路径配置参数 |
+| [jsdocEngineOptions] | <code>object</code> |  | jsdoc解析引擎的配置，实际上是`jsdoc.conf.js`的整合， 也可以使用  `RenderOptions.jsdoc2mdOptions.configure`字段来指定本地的jsdoc配置 配置选项[👉参考文档](https://jsdoc.app/about-configuring-jsdoc.html) |
+| [helpers] | <code>object</code> |  | 注入ejs模板的`helpers`对象，提供模板使用的帮助函数和变量 |
+| [presets] | <code>Array.&lt;module:GenDoc~RenderOptions&gt;</code> |  | 基于preset机制实现配置支持预设的功能， 具体[👉参考文档](https://gitee.com/agile-development-system/node-utils#presetutilsgetdeeppresetmergeconfig--config)`PresetUtils.getDeepPresetMerge` |
+| [noDefault] | <code>boolean</code> |  | 取消合并默认配置 |
+| [modify] | <code>module:@ads/node-utils~ConfigModify</code> |  | 将默认配置和preset合并后生成的config再次处理的钩子 具体[👉参考文档](https://gitee.com/agile-development-system/node-utils#presetutilsgetdeeppresetmergeconfig--config) |
 
-<a name="module_GenDoc..RenderOptionsModify"></a>
+<a name="GetFilesCodeResult"></a>
 
-#### GenDoc~RenderOptionsModify ⇒ [<code>RenderOptions</code>](#module_GenDoc..RenderOptions)
-**性质**: [<code>GenDoc</code>](#module_GenDoc)的内部类型声明
-
-| 参数 | 类型 | 描述 |
-| --- | --- | --- |
-| config | [<code>RenderOptions</code>](#module_GenDoc..RenderOptions) | 将默认配置和preset合并后生成的config |
-
-<a name="module_GenDoc..GetFilesCodeResult"></a>
-
-#### GenDoc~GetFilesCodeResult : <code>Object.&lt;string, string&gt;</code>
+### GetFilesCodeResult : <code>Object.&lt;string, string&gt;</code>
 获取文件的内容的返回值类型，key是文件的extname
 
-**性质**: [<code>GenDoc</code>](#module_GenDoc)的内部类型声明
+**性质**: 类型声明
 <a name="GetFilesCodeOptions"></a>
 
 ### GetFilesCodeOptions : <code>object</code>
@@ -211,21 +253,18 @@ npm i <%- pkg.name %>
 > 当前`__dirname`为`@ads/cli-plugin-doc/lib/utils`
 
 ```js
-/*
- * @Author: 锦阳
- * @Create: 2021年04月18日
- */
 const path = require('path');
 const defaultTemplate = path.resolve(__dirname, '../template/template.ejs');
 
 const defaultConfig = {
-    output: 'README.md',
     template: defaultTemplate,
     jsdoc2mdOptions: {
-        partial: [path.resolve(__dirname, '../partials/*.hbs')],
-        helper: [path.resolve(__dirname, '../helpers/*.js')],
+        partial: [path.resolve(__dirname, '../dmdRewrite/partials/*.hbs')],
+        helper: [path.resolve(__dirname, '../dmdRewrite/helpers/*.js')],
         'heading-depth': 3,
     },
+    // 默认`jsdocEngineOptions`配置一般只能增加无法删除，
+    // 但是可以在配置noDefault来去除默认配置
     jsdocEngineOptions: {
         plugins: [
             require.resolve('jsdoc-tsimport-plugin'),

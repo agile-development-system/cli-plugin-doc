@@ -2,10 +2,6 @@
  * @Author: 锦阳
  * @Create: 2021年05月09日
  */
-/*
- * @Author: 锦阳
- * @Create: 2021年05月09日
- */
 /**
  * returns a more appropriate 'kind', depending on context
  *
