@@ -124,52 +124,6 @@ test('GenDoc getRenderData nodefault', async () => {
 
 
 ## API文档
-<a name="module_GenDoc"></a>
-
-### GenDoc
-GenDoc 基于注释和可运行的示例代码自动生成文档的强大工具类
-
-#### 引入
-```js
-const GenDoc = require('@ads/cli-plugin-doc');
-```
-
-<a name="module_GenDoc.render"></a>
-
-#### GenDoc.render(options) ⇒ <code>Promise.&lt;string&gt;</code>
-基于ejs，用模板渲染文档
-
-**性质**: [<code>GenDoc</code>](#module_GenDoc)的静态方法
-**返回值**: <code>Promise.&lt;string&gt;</code> - 异步返回基于ejs模板渲染的文档文本
-
-| 参数 | 类型 | 描述 |
-| --- | --- | --- |
-| options | <code>module:GenDoc~RenderOptions</code> | 获取用来渲染模板的数据 |
-
-<a name="module_GenDoc.getRenderData"></a>
-
-#### GenDoc.getRenderData(options, [needMergeConfig]) ⇒ <code>Promise.&lt;module:GenDoc~GetRenderDataResult&gt;</code>
-获取用来渲染模板的数据（jsdoc生成的文档和示例代码的内容）
-
-**性质**: [<code>GenDoc</code>](#module_GenDoc)的静态方法
-
-| 参数 | 类型 | 默认值 | 描述 |
-| --- | --- | --- | --- |
-| options | <code>module:GenDoc~RenderOptions</code> |  | 配置参数 |
-| [needMergeConfig] | <code>boolean</code> | <code>true</code> | 是否需要调用`_mergeToDefaultConfig`， options已经是merge处理过的就不需要调用,否则不推荐传入`false` 会导致别名不支持 |
-
-<a name="module_GenDoc.getFilesCode"></a>
-
-#### GenDoc.getFilesCode(options) ⇒ <code>Promise.&lt;Array.&lt;module:GenDoc~GetFilesCodeResult&gt;&gt;</code>
-基于glob的文件遍历函数，返回文件对应内容的数组，
-以文件夹为单位返回文件内容对象，key是文件的extname
-
-**性质**: [<code>GenDoc</code>](#module_GenDoc)的静态方法
-
-| 参数 | 类型 | 描述 |
-| --- | --- | --- |
-| options | [<code>GetFilesCodeOptions</code>](#GetFilesCodeOptions) | 获取源代码的文件路径配置参数 |
-
 <a name="CmdParser"></a>
 
 ### CmdParser
@@ -201,6 +155,53 @@ const GenDoc = require('@ads/cli-plugin-doc');
 | options.root | <code>string</code> | 当前命令行npm包根目录 |
 | [options.isCore] | <code>boolean</code> | 是否是@ads/cli调用 |
 | [options.cmd] | <code>string</code> | 命令名称，命令调用必填 |
+
+<a name="GenDoc"></a>
+
+### GenDoc
+GenDoc 基于注释和可运行的示例代码自动生成文档的强大工具类
+
+#### 引入
+```js
+const GenDoc = require('@ads/cli-plugin-doc');
+```
+
+**性质**: 类
+<a name="GenDoc.render"></a>
+
+#### GenDoc.render(options) ⇒ <code>Promise.&lt;string&gt;</code>
+基于ejs，用模板渲染文档
+
+**性质**: [<code>GenDoc</code>](#GenDoc)的静态方法
+**返回值**: <code>Promise.&lt;string&gt;</code> - 异步返回基于ejs模板渲染的文档文本
+
+| 参数 | 类型 | 描述 |
+| --- | --- | --- |
+| options | [<code>RenderOptions</code>](#RenderOptions) | 获取用来渲染模板的数据 |
+
+<a name="GenDoc.getRenderData"></a>
+
+#### GenDoc.getRenderData(options, [needMergeConfig]) ⇒ [<code>Promise.&lt;GetRenderDataResult&gt;</code>](#GetRenderDataResult)
+获取用来渲染模板的数据（jsdoc生成的文档和示例代码的内容）
+
+**性质**: [<code>GenDoc</code>](#GenDoc)的静态方法
+
+| 参数 | 类型 | 默认值 | 描述 |
+| --- | --- | --- | --- |
+| options | [<code>RenderOptions</code>](#RenderOptions) |  | 配置参数 |
+| [needMergeConfig] | <code>boolean</code> | <code>true</code> | 是否需要调用`_mergeToDefaultConfig`， options已经是merge处理过的就不需要调用,否则不推荐传入`false` 会导致别名不支持 |
+
+<a name="GenDoc.getFilesCode"></a>
+
+#### GenDoc.getFilesCode(options) ⇒ <code>Promise.&lt;Array.&lt;GetFilesCodeResult&gt;&gt;</code>
+基于glob的文件遍历函数，返回文件对应内容的数组，
+以文件夹为单位返回文件内容对象，key是文件的extname
+
+**性质**: [<code>GenDoc</code>](#GenDoc)的静态方法
+
+| 参数 | 类型 | 描述 |
+| --- | --- | --- |
+| options | [<code>GetFilesCodeOptions</code>](#GetFilesCodeOptions) | 获取源代码的文件路径配置参数 |
 
 <a name="Command"></a>
 
@@ -249,7 +250,7 @@ const GenDoc = require('@ads/cli-plugin-doc');
 | 属性 | 类型 | 描述 |
 | --- | --- | --- |
 | docs | <code>string</code> | 源码使用jsdoc渲染后的markdown文本 |
-| codes | <code>Array.&lt;module:GenDoc~GetFilesCodeResult&gt;</code> | 获取到的代码内容 |
+| codes | [<code>Array.&lt;GetFilesCodeResult&gt;</code>](#GetFilesCodeResult) | 获取到的代码内容 |
 
 <a name="RenderOptions"></a>
 
@@ -271,7 +272,7 @@ const GenDoc = require('@ads/cli-plugin-doc');
 | [codesOptions] | [<code>GetFilesCodeOptions</code>](#GetFilesCodeOptions) |  | 获取源代码的文件路径配置参数 |
 | [jsdocEngineOptions] | <code>object</code> |  | jsdoc解析引擎的配置，实际上是`jsdoc.conf.js`的整合， 也可以使用  `RenderOptions.jsdoc2mdOptions.configure`字段来指定本地的jsdoc配置 配置选项[👉参考文档](https://jsdoc.app/about-configuring-jsdoc.html) |
 | [helpers] | <code>object</code> |  | 注入ejs模板的`helpers`对象，提供模板使用的帮助函数和变量 |
-| [presets] | <code>Array.&lt;module:GenDoc~RenderOptions&gt;</code> |  | 基于preset机制实现配置支持预设的功能， 具体[👉参考文档](https://gitee.com/agile-development-system/node-utils#presetutilsgetdeeppresetmergeconfig--config)`PresetUtils.getDeepPresetMerge` |
+| [presets] | [<code>Array.&lt;RenderOptions&gt;</code>](#RenderOptions) |  | 基于preset机制实现配置支持预设的功能， 具体[👉参考文档](https://gitee.com/agile-development-system/node-utils#presetutilsgetdeeppresetmergeconfig--config)`PresetUtils.getDeepPresetMerge` |
 | [noDefault] | <code>boolean</code> |  | 取消合并默认配置 |
 | [modify] | <code>module:@ads/node-utils~ConfigModify</code> |  | 将默认配置和preset合并后生成的config再次处理的钩子 具体[👉参考文档](https://gitee.com/agile-development-system/node-utils#presetutilsgetdeeppresetmergeconfig--config) |
 

@@ -12,10 +12,8 @@ const { FastFs, FastPath, PresetUtils } = require('@ads/node-utils');
  * ```js
  * const GenDoc = require('@ads/cli-plugin-doc');
  * ```
- *
- * @module  GenDoc
  */
-module.exports = class GenDoc {
+class GenDoc {
     /**
      * 基于ejs，用模板渲染文档
      *
@@ -88,6 +86,9 @@ module.exports = class GenDoc {
         });
     }
 };
+
+module.exports = GenDoc;
+
 /* istanbul ignore next */
 /**
  * 将当前配置和默认配置合并
