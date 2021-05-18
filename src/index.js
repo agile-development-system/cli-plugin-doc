@@ -3,7 +3,6 @@ const jsdocRender = require('./utils/jsdocRender');
 const getFilesPath = require('./utils/getFilesPath');
 const defaultConfig = require('./utils/config');
 const path = require('path');
-const merge = require('lodash.merge');
 const fs = require('fs-extra');
 const { FastFs, FastPath, PresetUtils } = require('@ads/node-utils');
 /**
@@ -89,7 +88,7 @@ module.exports = class GenDoc {
         });
     }
 };
-
+/* istanbul ignore next */
 /**
  * 将当前配置和默认配置合并
  *
@@ -100,12 +99,14 @@ module.exports = class GenDoc {
 async function _mergeToDefaultConfig(options = {}) {
     // 获取用户本地配置文件
     const cwdConfPath = FastPath.getCwdPath(options.config || 'ads.doc.config.js');
+    options.presets = options.presets || [];
     if (FastFs.getPathStatSync(cwdConfPath)) {
         const userConfig = require(cwdConfPath);
-        options.presets = options.presets || [];
         options.presets.unshift(userConfig);
     }
-    const config = merge({ jsdoc2mdOptions: {}, codesOptions: {}, jsdocEngineOptions: {} }, options.noDefault ? {} : defaultConfig, await PresetUtils.getDeepPresetMerge(options));
+    !options.noDefault && options.presets.push(defaultConfig);
+    options.presets.push({ jsdoc2mdOptions: {}, codesOptions: {}, jsdocEngineOptions: {} });
+    const config = await PresetUtils.getDeepPresetMerge(options);
     // files别名支持
     if (config.files) {
         config.jsdoc2mdOptions.files = config.files;
@@ -137,6 +138,7 @@ async function _mergeToDefaultConfig(options = {}) {
  *
  * @typedef {object} RenderOptions
  * @property {string[]} files `jsdoc2mdOptions.files`的别名
+ * @property {fs.PathLike} output doc文档渲染导出的文件名称路径，相对于cwd目录
  * @property {string} template ejs渲染的模板相对于cwd的路径或者绝对路径
  * @property {string} [codesDir] `codesOptions.dir`的别名
  * @property {string[]} [codesFiles] `codesOptions.codesFiles`的别名
@@ -159,23 +161,3 @@ async function _mergeToDefaultConfig(options = {}) {
  *
  * @typedef {Object.<string,string>} GetFilesCodeResult
  */
-
-// (async () => {
-//     module.exports.render({
-//         output: 'README.md',
-//         files: ['./src/**/*.js'],
-//         codesDir: './exa',
-//         codesFiles: ['*'],
-//         template: './template.ejs',
-//         config: './ads.doc.conf.js',
-//         jsdoc2mdOptions: {
-//             // files: ['./src/**/*.js'],
-//         },
-//         helpers: {
-//             template: await module.exports.getFilesCode({ dir: './src/template', files: ['*'] }),
-//             defaultConfig: await module.exports.getFilesCode({ dir: './src/utils', files: ['config.js'] }),
-//             dirname: path.join(__dirname, './utils'),
-//         },
-//         // codesOptions: { dir: './exa', files: ['*'] },
-//     }).then(res => console.log(res));
-// })();

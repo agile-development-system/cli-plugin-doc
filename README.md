@@ -1,6 +1,5 @@
-
 # @ads/cli-plugin-doc
-**版本** ：1.0.0
+**版本** ：1.0.3-2
 通用注释转markdown文档生成器,目标是支持所有类型的文件
 
 ## 快速开始
@@ -10,23 +9,49 @@
 npm i @ads/cli-plugin-doc
 ```
 
+### 命令行使用文档
+
+```
+Usage: ads-doc [options]
+
+通用注释转markdown文档生成器,目标是支持所有类型的文件
+
+Options:
+  <files...>                          jsdoc入口文件glob格式路径描述(需要用引号包裹避免解析失败)，相对于cwd目录
+  -o,--output <output>                doc文档渲染导出的文件名称路径，相对于cwd目录
+  -c,--config <config>                配置文件路径，相对于cwd目录，仅支持js文件类型 (default:
+                                      "ads.doc.config.js")
+  -t,--template <template>            ejs渲染的模板相对于cwd的路径或者绝对路径
+  --cd,--codes-dir <codesDir>         glob格式路径，代码演示示例的对应文件夹路径，路径需要到某个具体示例的对应文件夹
+  --cf,--codes-files <codesFiles...>  glob格式路径，相对于codesDir的代码演示文件夹的文件路径描述
+  -v,--version                        查看版本号
+  -h, --help                          查看帮助信息
+
+注意：每个包含通配符的路径都需要用引号包裹，否则会被系统提前解析导致意料之外的错误
+
+文档查看：https://gitee.com/agile-development-system/cli-plugin-doc
+@ads/cli-plugin-doc@1.0.3-2 /Users/jinyang/code/ads/cli-plugin-doc
+
+```
+
+
+
 ## 代码演示
 ```js
-// ads.doc.config.js
-
 const path = require('path');
 const GenDoc = require('@ads/cli-plugin-doc');
 /**
  * render配置生成
  *
- * @param {object} [options] 选项
+ * @param {object} [options={}] 选项
  * @param {boolean} [options.needDirError] 是否需要触发文件路径错误
  * @param {boolean} [options.noFiles] 是否需要去除files选项
  * @param {boolean} [options.noDefault] 是否取消default配置
  * @param {boolean} [options.noCodes] 是否去除codes相关配置
+ * @param options.output
  * @returns {import('../../src/index').RenderOptions}
  */
-module.exports = async ({ needDirError, noFiles, noDefault, noCodes } = {}) => {
+module.exports = async ({ needDirError, noFiles, noDefault, noCodes, output } = {}) => {
     return {
         files: noFiles ? null : ['./src/**/*.js'],
         ...(noCodes
@@ -36,6 +61,7 @@ module.exports = async ({ needDirError, noFiles, noDefault, noCodes } = {}) => {
                 codesFiles: ['*'],
             }
         ),
+        output: output && path.resolve(__dirname, '../../.temp/test.md'),
         template: './template.ejs',
         config: './ads.doc.conf.js',
         noDefault,
@@ -51,16 +77,17 @@ module.exports = async ({ needDirError, noFiles, noDefault, noCodes } = {}) => {
 ```js
 const { expect, test } = require('@jest/globals');
 const GenDoc = require('@ads/cli-plugin-doc');
-const config = require('../__mock__/index'); ;
-
+const config = require('../__mock__/index');
+const path = require('path');
 test('GenDoc render', async () => {
     const res = await GenDoc.render(await config());
     expect(typeof res === 'string').toBe(true);
 });
 
-// 同时也会输出reademe
 test('GenDoc render output & use ads.doc.config.js', async () => {
-    const res = await GenDoc.render();
+    const res = await GenDoc.render({
+        output: path.resolve(__dirname, '../../.temp/README.md'),
+    });
     expect(typeof res === 'undefined').toBe(true);
 });
 
@@ -143,6 +170,74 @@ const GenDoc = require('@ads/cli-plugin-doc');
 | --- | --- | --- |
 | options | [<code>GetFilesCodeOptions</code>](#GetFilesCodeOptions) | 获取源代码的文件路径配置参数 |
 
+<a name="CmdParser"></a>
+
+### CmdParser
+基于`commander.js`封装的命令行解析工具库
+
+**性质**: 类
+<a name="CmdParser.optionParseByConfig"></a>
+
+#### CmdParser.optionParseByConfig(program, config)
+基于config配置Command实例
+
+**性质**: [<code>CmdParser</code>](#CmdParser)的静态方法
+
+| 参数 | 类型 | 描述 |
+| --- | --- | --- |
+| program | [<code>Command</code>](#Command) | command实例 |
+| config | [<code>CmdConfig</code>](#CmdConfig) | 命令行解析配置 |
+
+<a name="CmdParser.cmdParser"></a>
+
+#### CmdParser.cmdParser(options)
+基于配置文件的命令行解析器
+
+**性质**: [<code>CmdParser</code>](#CmdParser)的静态方法
+
+| 参数 | 类型 | 描述 |
+| --- | --- | --- |
+| options | <code>object</code> | 函数参数 |
+| options.root | <code>string</code> | 当前命令行npm包根目录 |
+| [options.isCore] | <code>boolean</code> | 是否是@ads/cli调用 |
+| [options.cmd] | <code>string</code> | 命令名称，命令调用必填 |
+
+<a name="Command"></a>
+
+### Command : <code>module:commander~Command</code>
+`commander.js`实例
+
+**性质**: 类型声明
+<a name="CmdConfig"></a>
+
+### CmdConfig : <code>object</code>
+命令行解析配置
+
+**性质**: 类型声明
+**属性**
+
+| 属性 | 类型 | 描述 |
+| --- | --- | --- |
+| cmd | <code>string</code> | 作为插件时为子命令名称，单独使用时`ads-<cmd>`为命令行程序名称 |
+| desc | <code>string</code> | 描述 |
+| alias | <code>string</code> | 此命令的别名，只在插件调用时有效 |
+| opts | [<code>Array.&lt;OptConfig&gt;</code>](#OptConfig) | option配置项描述 |
+
+<a name="OptConfig"></a>
+
+### OptConfig : <code>object</code>
+命令行option解析配置
+
+**性质**: 类型声明
+**属性**
+
+| 属性 | 类型 | 描述 |
+| --- | --- | --- |
+| opt | <code>string</code> | option字段配置 |
+| desc | <code>string</code> | 描述 |
+| default | <code>string</code> \| <code>boolean</code> | 默认值 |
+| required | <code>boolean</code> | 是否是必填参数 |
+
 <a name="GetRenderDataResult"></a>
 
 ### GetRenderDataResult : <code>object</code>
@@ -167,6 +262,7 @@ const GenDoc = require('@ads/cli-plugin-doc');
 | 属性 | 类型 | 默认值 | 描述 |
 | --- | --- | --- | --- |
 | files | <code>Array.&lt;string&gt;</code> |  | `jsdoc2mdOptions.files`的别名 |
+| output | <code>fs.PathLike</code> |  | doc文档渲染导出的文件名称路径，相对于cwd目录 |
 | template | <code>string</code> |  | ejs渲染的模板相对于cwd的路径或者绝对路径 |
 | [codesDir] | <code>string</code> |  | `codesOptions.dir`的别名 |
 | [codesFiles] | <code>Array.&lt;string&gt;</code> |  | `codesOptions.codesFiles`的别名 |
@@ -237,7 +333,7 @@ npm i <%- pkg.name %>
 ## 代码演示
 <%-
     helpers.renderCode
-        &&helpers.renderCode(codes, helpers.extSort, helpers.extTrans)
+        &&helpers.renderCode(codes, ...[helpers.extSort, helpers.extTrans].filter(Boolean))
 %>
 <% } %><% if(docs) { %>
 
@@ -259,6 +355,7 @@ const defaultTemplate = path.resolve(__dirname, '../template/template.ejs');
 const defaultConfig = {
     template: defaultTemplate,
     jsdoc2mdOptions: {
+        'no-cache': true,
         partial: [path.resolve(__dirname, '../dmdRewrite/partials/*.hbs')],
         helper: [path.resolve(__dirname, '../dmdRewrite/helpers/*.js')],
         'heading-depth': 3,
@@ -299,8 +396,6 @@ const defaultConfig = {
             });
             return result;
         },
-        extSort: ['md', 'vue', 'jsx', 'js'],
-        extTrans: { vue: 'html' },
     },
 };
 

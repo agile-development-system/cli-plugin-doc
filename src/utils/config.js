@@ -4,6 +4,7 @@ const defaultTemplate = path.resolve(__dirname, '../template/template.ejs');
 const defaultConfig = {
     template: defaultTemplate,
     jsdoc2mdOptions: {
+        'no-cache': true,
         partial: [path.resolve(__dirname, '../dmdRewrite/partials/*.hbs')],
         helper: [path.resolve(__dirname, '../dmdRewrite/helpers/*.js')],
         'heading-depth': 3,
@@ -44,8 +45,6 @@ const defaultConfig = {
             });
             return result;
         },
-        extSort: ['md', 'vue', 'jsx', 'js'],
-        extTrans: { vue: 'html' },
     },
 };
 

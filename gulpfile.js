@@ -8,9 +8,15 @@ const babel = require('gulp-babel');
 const ts = require('gulp-typescript');
 const tsProject = ts.createProject('tsconfig.json');
 const merge = require('merge2');
+/**
+ * @param {()=>{}} cb 回调
+ */
 function clean(cb) {
     rimraf('lib', cb);
 }
+/**
+ * @param {()=>{}} cb 回调
+ */
 function build(cb) {
     const tsResult = src('src/**/*.[tj]s')
         .pipe(tsProject());
@@ -22,8 +28,11 @@ function build(cb) {
     cb();
 }
 
+/**
+ * @param {()=>{}} cb 回调
+ */
 function cp(cb) {
-    src('src/template/*').pipe(dest('lib/template'));
+    src('src/**/*.!([tj]s)').pipe(dest('lib'));
     cb();
 }
 

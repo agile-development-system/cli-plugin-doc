@@ -1,16 +1,28 @@
 {
   "name": "@ads/cli-plugin-doc",
-  "version": "1.0.0",
+  "version": "1.0.3-2",
   "description": "通用注释转markdown文档生成器,目标是支持所有类型的文件",
+  "bin": {
+    "ads-doc": "lib/bin/doc.js"
+  },
   "main": "lib",
   "types": "lib/types",
   "scripts": {
     "build": "node gulpfile.js",
-    "test": "jest"
+    "test": "jest",
+    "docs":"npm link && ads-doc",
+    "prepublishOnly": "npm run docs && npm run test && npm run build"
   },
+  "ads":{
+      "config":"lib/ads.cli.config.js"
+  },
+  "files": [
+    "lib",
+    "src"
+  ],
   "repository": {
     "type": "git",
-    "url": "https://gitee.com/agile-development-system/gendoc.git"
+    "url": "https://gitee.com/agile-development-system/cli-plugin-doc.git"
   },
   "keywords": [
     "jsdoc",
@@ -22,7 +34,6 @@
   "author": "junyang",
   "license": "MIT",
   "devDependencies": {
-    "@angelventura/eslint-plugin-ejs": "^0.2.0",
     "@babel/core": "^7.13.15",
     "@babel/eslint-parser": "^7.13.14",
     "@babel/plugin-proposal-class-properties": "^7.13.0",
@@ -51,11 +62,13 @@
   },
   "dependencies": {
     "@ads/node-utils": "^1.0.8",
+    "commander": "^7.2.0",
     "ejs": "^3.1.6",
     "file-set": "^4.0.2",
     "fs-extra": "^9.1.0",
     "jsdoc-to-markdown": "^7.0.1",
     "jsdoc-tsimport-plugin": "^1.0.5",
-    "lodash.merge": "^4.6.2"
+    "lodash.merge": "^4.6.2",
+    "ora": "^5.4.0"
   }
 }

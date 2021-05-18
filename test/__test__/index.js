@@ -1,15 +1,16 @@
 const { expect, test } = require('@jest/globals');
 const GenDoc = require('@ads/cli-plugin-doc');
-const config = require('../__mock__/index'); ;
-
+const config = require('../__mock__/index');
+const path = require('path');
 test('GenDoc render', async () => {
     const res = await GenDoc.render(await config());
     expect(typeof res === 'string').toBe(true);
 });
 
-// 同时也会输出reademe
 test('GenDoc render output & use ads.doc.config.js', async () => {
-    const res = await GenDoc.render();
+    const res = await GenDoc.render({
+        output: path.resolve(__dirname, '../../.temp/README.md'),
+    });
     expect(typeof res === 'undefined').toBe(true);
 });
 

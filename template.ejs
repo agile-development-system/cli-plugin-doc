@@ -1,7 +1,6 @@
 <%
 const {docs, codes, helpers, pkg } = locals
-%>
-# <%- pkg.name %>
+%># <%- pkg.name %>
 **版本** ：<%- pkg.version %>
 <%- pkg.description %>
 
@@ -10,10 +9,21 @@ const {docs, codes, helpers, pkg } = locals
 ### 安装
 <%  %>```bash
 npm i <%- pkg.name %>
-<%  %>```<% if(codes&&codes.length) { %>
+<%  %>```<% if(helpers.cliUsages&&helpers.cliUsages.length) { %>
+
+### 命令行使用文档
+<% helpers.cliUsages.forEach(usage=>{ %>
+<%  %>```
+<%- usage %>
+<%  %>```
+<% }) %>
+<% } %><% if(codes&&codes.length) { %>
 
 ## 代码演示
-<%- helpers.renderCode&&helpers.renderCode(codes) %>
+<%-
+    helpers.renderCode
+        &&helpers.renderCode(codes, ...[helpers.extSort, helpers.extTrans].filter(Boolean))
+%>
 <% } %><% if(docs) { %>
 
 ## API文档

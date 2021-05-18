@@ -26,7 +26,7 @@ npm i <%- pkg.name %>
 ## 代码演示
 <%-
     helpers.renderCode
-        &&helpers.renderCode(codes, helpers.extSort, helpers.extTrans)
+        &&helpers.renderCode(codes, ...[helpers.extSort, helpers.extTrans].filter(Boolean))
 %>
 <% } %><% if(docs) { %>
 
