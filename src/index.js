@@ -12,6 +12,8 @@ const { FastFs, FastPath, PresetUtils } = require('@ads/node-utils');
  * ```js
  * const GenDoc = require('@ads/cli-plugin-doc');
  * ```
+ *
+ * @module GenDoc
  */
 class GenDoc {
     /**
