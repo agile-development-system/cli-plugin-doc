@@ -227,11 +227,10 @@ jsdocToMarkdown配置参数，具体可[👉参考文档](https://github.com/jsd
 
 
 
-<a name="defaultTemplate "></a>
+<a name="defaultTemplate"></a>
 
 
 ## 默认文档渲染模板
-
 
 ```ejs
 <%
@@ -304,14 +303,12 @@ const {docs, codes, helpers, pkg} = locals
 
 
 
-<a name="defaultConfig "></a>
+<a name="defaultConfig"></a>
 
 
 ## 默认文档渲染配置
 
-
 > 当前`__dirname`为`@ads/cli-plugin-doc/lib/utils`
-
 
 ```js
 const path = require('path');

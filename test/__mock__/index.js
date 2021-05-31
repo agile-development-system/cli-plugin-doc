@@ -1,4 +1,4 @@
-const path = require('path');
+
 const GenDoc = require('@ads/cli-plugin-doc');
 /**
  * render配置生成
@@ -11,6 +11,11 @@ const GenDoc = require('@ads/cli-plugin-doc');
  * @returns {import('../../src/index').RenderOptions}
  */
 module.exports = async ({ needDirError, noFiles, noDefault, noCodes } = {}) => {
+    const [template, defaultConfig, cliUsages] = (await Promise.all([
+        GenDoc.getFilesCode({ dir: './src/template', files: ['*'] }),
+        GenDoc.getFilesCode({ dir: './src/utils', files: ['config.js'] }),
+        GenDoc.getCliUsages(),
+    ]));
     return {
         files: noFiles ? null : ['./src/**/*.js'],
         ...(noCodes
@@ -20,7 +25,6 @@ module.exports = async ({ needDirError, noFiles, noDefault, noCodes } = {}) => {
                 codesFiles: ['*'],
             }
         ),
-        template: './template.ejs',
         config: './ads.doc.conf.js',
         noDefault,
         jsdocEngineOptions: noDefault && {
@@ -29,9 +33,9 @@ module.exports = async ({ needDirError, noFiles, noDefault, noCodes } = {}) => {
             ],
         },
         helpers: {
-            template: await GenDoc.getFilesCode({ dir: './src/template', files: ['*'] }),
-            defaultConfig: await GenDoc.getFilesCode({ dir: './src/utils', files: ['config.js'] }),
-            dirname: path.join(__dirname, './utils'),
+            template,
+            defaultConfig,
+            cliUsages,
         },
     };
 };

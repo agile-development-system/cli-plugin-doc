@@ -99,6 +99,7 @@ class GenDoc {
      */
     static async getCliUsages() {
         const pkgPath = FastPath.getCwdPath('package.json');
+        /* istanbul ignore next */
         if (FastFs.getPathStatSync(pkgPath)) {
             const pkg = require(pkgPath);
             const bin = pkg.bin;
@@ -108,14 +109,17 @@ class GenDoc {
                         .map(key => execPromise(`${key} -h`)),
                 ).then(res => res.filter(Boolean));
             } catch (error) {
+                /* istanbul ignore next */
                 await Promise.all([
                     execPromise('chmod -R 750 lib'),
                     execPromise('npm link'),
                 ]);
+                /* istanbul ignore next */
                 return this.getCliUsages();
             }
         } else {
-            throw new Error('请在');
+            /* istanbul ignore next */
+            throw new Error('未检测到根目录下存在【package.json】文件');
         }
     }
 };
@@ -163,7 +167,7 @@ async function _mergeToDefaultConfig(options = {}) {
     }
     return config;
 }
-
+/* istanbul ignore next */
 /**
  * execPromise
  *

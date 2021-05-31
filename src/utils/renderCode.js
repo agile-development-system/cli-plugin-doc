@@ -2,6 +2,7 @@
  * @Author: 锦阳
  * @Create: 2021年05月31日
  */
+/* istanbul ignore next */
 /**
  * 将codes渲染成md代码片段
  *
