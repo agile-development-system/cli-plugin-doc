@@ -5,6 +5,8 @@ const defaultConfig = require('./utils/config');
 const path = require('path');
 const fs = require('fs-extra');
 const { FastFs, FastPath, PresetUtils } = require('@ads/node-utils');
+const { exec } = require('child_process');
+const renderCode = require('./utils/renderCode');
 /**
  * GenDoc 基于注释和可运行的示例代码自动生成文档的强大工具类
  *
@@ -13,7 +15,6 @@ const { FastFs, FastPath, PresetUtils } = require('@ads/node-utils');
  * const GenDoc = require('@ads/cli-plugin-doc');
  * ```
  *
- * @module GenDoc
  */
 class GenDoc {
     /**
@@ -87,6 +88,36 @@ class GenDoc {
             return codes;
         });
     }
+
+    static renderCode = renderCode;
+    /**
+     * 获取命令行使用帮助文档
+     * 建议提前确保全局使用了最新的脚本
+     * 函数为异步函数，注意不能作为ejs帮助函数传入，可以获取返回值后，将返回值作为helpers的变量传入
+     *
+     * @returns {Promise<string[]>}
+     */
+    static async getCliUsages() {
+        const pkgPath = FastPath.getCwdPath('package.json');
+        if (FastFs.getPathStatSync(pkgPath)) {
+            const pkg = require(pkgPath);
+            const bin = pkg.bin;
+            try {
+                return await Promise.all(
+                    Object.keys(bin)
+                        .map(key => execPromise(`${key} -h`)),
+                ).then(res => res.filter(Boolean));
+            } catch (error) {
+                await Promise.all([
+                    execPromise('chmod -R 750 lib'),
+                    execPromise('npm link'),
+                ]);
+                return this.getCliUsages();
+            }
+        } else {
+            throw new Error('请在');
+        }
+    }
 };
 
 module.exports = GenDoc;
@@ -107,9 +138,14 @@ async function _mergeToDefaultConfig(options = {}) {
         const userConfig = require(cwdConfPath);
         options.presets.unshift(userConfig);
     }
-    !options.noDefault && options.presets.push(defaultConfig);
     options.presets.push({ jsdoc2mdOptions: {}, codesOptions: {}, jsdocEngineOptions: {} });
-    const config = await PresetUtils.getDeepPresetMerge(options);
+    let config = await PresetUtils.getDeepPresetMerge(options);
+    // 支持配置是否使用默认配置
+    if (config.default !== false) {
+        config.presets = config.presets || [];
+        config.presets.push(defaultConfig);
+    }
+    config = await PresetUtils.getDeepPresetMergeAndModify(config);
     // files别名支持
     if (config.files) {
         config.jsdoc2mdOptions.files = config.files;
@@ -129,7 +165,25 @@ async function _mergeToDefaultConfig(options = {}) {
 }
 
 /**
- * 函数[getRenderData]{@link getRenderData}的返回值
+ * execPromise
+ *
+ * @param {string} command shell命令
+ * @returns {Promise<string>}
+ * @ignore
+ */
+function execPromise(command) {
+    return new Promise((resolve, reject) => {
+        exec(command, (error, stdout, stderr) => {
+            if (error) {
+                return reject(error);
+            }
+            return resolve(stdout);
+        });
+    });
+}
+
+/**
+ * 函数[GenDoc.getRenderData](#GenDoc.getRenderData)的返回值
  *
  * @typedef {object} GetRenderDataResult
  * @property {string} docs 源码使用jsdoc渲染后的markdown文本
@@ -146,6 +200,7 @@ async function _mergeToDefaultConfig(options = {}) {
  * @property {string} [codesDir] `codesOptions.dir`的别名
  * @property {string[]} [codesFiles] `codesOptions.codesFiles`的别名
  * @property {fs.PathLike} [conifg=ads.doc.config.js] 配置文件路径，默认为运行目录下的`ads.doc.config.js`,仅支持`js`文件类型
+ * @property {boolean} [default] 是否合并默认配置，一般我们认为您是需要默认配置的，当默认配置和你的需求冲突时可以设置为`false`
  * @property {import('./utils/jsdocRender').Jsdoc2mdOptions} [jsdoc2mdOptions] jsdocToMarkdown配置参数
  * @property {import('./utils/getFilesPath').GetFilesCodeOptions} [codesOptions] 获取源代码的文件路径配置参数
  * @property {object} [jsdocEngineOptions] jsdoc解析引擎的配置，实际上是`jsdoc.conf.js`的整合，
@@ -163,4 +218,27 @@ async function _mergeToDefaultConfig(options = {}) {
  * 获取文件的内容的返回值类型，key是文件的extname
  *
  * @typedef {Object.<string,string>} GetFilesCodeResult
+ */
+
+/**
+ * 默认模板所支持的`helpers`属性
+ *
+ * @typedef {Object} DefaultHelpers
+ * @property {string} installCode 安装脚本，bash脚本
+ * @property {string} importCode 引入代码示例，js字符串
+ * @property {string} exportCode 导出代码，js字符串
+ * @property {string[]} cliUsages cli命令行使用帮助文档，格式类似`ads-doc -h`的输出内容
+ * @property {string} remark 文档备注信息，md字符串
+ * @property {GenDoc.renderCode} renderCode 将`GenDoc.getFileCodes`的返回值渲染成对应的代码段
+ * @property {Postfix[]} postfixes 后缀内容数组
+ */
+
+/**
+ * 后缀内容类型
+ *
+ * @typedef {Object} Postfix
+ * @property {string} id 锚点的名称，填写之后可以支持 `href=\`#${id}\``锚点定位
+ * @property {string} title 内容的标题
+ * @property {string} desc 内容的描述
+ * @property {string} content 内容的正文
  */

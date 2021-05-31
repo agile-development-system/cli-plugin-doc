@@ -8,10 +8,9 @@ const GenDoc = require('@ads/cli-plugin-doc');
  * @param {boolean} [options.noFiles] 是否需要去除files选项
  * @param {boolean} [options.noDefault] 是否取消default配置
  * @param {boolean} [options.noCodes] 是否去除codes相关配置
- * @param options.output
  * @returns {import('../../src/index').RenderOptions}
  */
-module.exports = async ({ needDirError, noFiles, noDefault, noCodes, output } = {}) => {
+module.exports = async ({ needDirError, noFiles, noDefault, noCodes } = {}) => {
     return {
         files: noFiles ? null : ['./src/**/*.js'],
         ...(noCodes
@@ -21,10 +20,14 @@ module.exports = async ({ needDirError, noFiles, noDefault, noCodes, output } = 
                 codesFiles: ['*'],
             }
         ),
-        output: output && path.resolve(__dirname, '../../.temp/test.md'),
         template: './template.ejs',
         config: './ads.doc.conf.js',
         noDefault,
+        jsdocEngineOptions: noDefault && {
+            plugins: [
+                require.resolve('jsdoc-tsimport-plugin'),
+            ],
+        },
         helpers: {
             template: await GenDoc.getFilesCode({ dir: './src/template', files: ['*'] }),
             defaultConfig: await GenDoc.getFilesCode({ dir: './src/utils', files: ['config.js'] }),

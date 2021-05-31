@@ -12,6 +12,14 @@ module.exports = {
     moduleNameMapper: {
         [`^${pkg.name}$`]: '<rootDir>/src/index.js',
     },
+    coverageThreshold: {
+        global: {
+            statements: 100,
+            branches: 100,
+            functions: 100,
+            lines: 100,
+        },
+    },
     testRegex: 'test/__test__/(.+)\\.(jsx?)$',
     moduleFileExtensions: ['js', 'jsx', 'json', 'node'],
     collectCoverageFrom: [

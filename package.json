@@ -8,13 +8,13 @@
   "main": "lib",
   "types": "lib/types",
   "scripts": {
-    "build": "node gulpfile.js",
+    "build": "gulp",
     "test": "jest",
-    "docs":"npm link && ads-doc",
-    "prepublishOnly": "npm run docs && npm run test && npm run build"
+    "docs": "node lib/bin/doc.js",
+    "prepublishOnly": "npm run test && npm run build && chmod -R 750 lib && npm link && npm run docs"
   },
-  "ads":{
-      "config":"lib/ads.cli.config.js"
+  "ads": {
+    "config": "lib/ads.cli.config.js"
   },
   "files": [
     "lib",
@@ -54,6 +54,7 @@
     "eslint-plugin-promise": "^4.3.1",
     "gulp": "^4.0.2",
     "gulp-babel": "^8.0.0",
+    "gulp-cli": "^2.3.0",
     "gulp-typescript": "^6.0.0-alpha.1",
     "jest": "^26.6.3",
     "merge2": "^1.4.1",
@@ -61,7 +62,7 @@
     "typescript": "^4.2.4"
   },
   "dependencies": {
-    "@ads/node-utils": "^1.0.8",
+    "@ads/node-utils": "^1.0.10-4",
     "commander": "^7.2.0",
     "ejs": "^3.1.6",
     "file-set": "^4.0.2",

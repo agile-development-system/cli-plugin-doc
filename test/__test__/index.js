@@ -32,12 +32,12 @@ test('GenDoc render error', async () => {
     }
 });
 
-test('GenDoc getRenderData', async () => {
+test('GenDoc getRenderData nodefault', async () => {
     const res = await GenDoc.getRenderData(await config({ noDefault: true }));
     expect(typeof res === 'object').toBe(true);
 });
 
-test('GenDoc getRenderData nodefault', async () => {
+test('GenDoc getRenderData', async () => {
     const res = await GenDoc.getRenderData(await config(), false);
     expect(typeof res === 'object').toBe(true);
 });

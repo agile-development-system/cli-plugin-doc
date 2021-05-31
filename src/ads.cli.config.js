@@ -41,6 +41,10 @@ module.exports = [
                 opt: '--cf,--codes-files <codesFiles...>',
                 desc: 'glob格式路径，相对于codesDir的代码演示文件夹的文件路径描述',
             },
+            {
+                opt: '--no-default',
+                desc: '禁止使用默认配置，默认配置相对比较通用，大部分情况不需要禁止，当默认配置和你的配置冲突时可以使用此选项',
+            },
         ],
     },
 ];

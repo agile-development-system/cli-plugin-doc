@@ -4,5 +4,5 @@
  * @Create: 2021年05月17日
  */
 const path = require('path');
-const CmdParser = require('../cmdParser');
+const CmdParser = require('@ads/node-utils').CmdParser;
 CmdParser.cmdParser({ root: path.resolve(__dirname, '../../'), cmd: 'doc' });

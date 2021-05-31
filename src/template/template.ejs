@@ -9,7 +9,7 @@ const {docs, codes, helpers, pkg} = locals
 
 ### 安装
 <%  %>```bash
-npm i <%- pkg.name %>
+<%- helpers.installCode || 'npm i ' + pkg.name %>
 <%  %>```<% if(helpers.importCode) { %>
 
 ### 引入
@@ -17,19 +17,48 @@ npm i <%- pkg.name %>
 <%- helpers.importCode %>
 <%  %>```
 <% } %><% if(helpers.exportCode) { %>
+
 ### 导出
 <%  %>```js
 <%- helpers.exportCode %>
 <%  %>```
+<% } %><% if(helpers.cliUsages&&helpers.cliUsages.length) { %>
+
+### 命令行使用文档
+<% helpers.cliUsages.forEach(usage=>{ %>
+<%  %>```
+<%- usage %>
+<%  %>```
+<% }) %>
+<% } %>
+
+<% if(helpers.remark) { %>
+
+<%- helpers.remark %>
 <% } %><% if(codes&&codes.length) { %>
 
 ## 代码演示
 <%-
     helpers.renderCode
-        &&helpers.renderCode(codes, ...[helpers.extSort, helpers.extTrans].filter(Boolean))
+        &&helpers.renderCode(codes)
 %>
 <% } %><% if(docs) { %>
 
 ## API文档
 <%- docs %>
-<% } %>
+<% } %><% if(helpers.postfixes&&helpers.postfixes.length) { %> <!-- 渲染后缀内容  -->
+<% helpers.postfixes.forEach(postfix=>{ %>
+<% if(postfix.id) { %>
+
+<a name="<%- postfix.id %>"></a>
+<% } %><% if(postfix.title) { %>
+
+## <%- postfix.title %>
+<% } %><% if(postfix.desc) { %>
+> <%- postfix.desc %>
+<% } %><% if(postfix.content) { %>
+<%- postfix.content %>
+<% }
+})
+} %>
+

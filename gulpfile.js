@@ -2,40 +2,43 @@
  * @Author: 锦阳
  * @Create: 2021年04月12日
  */
-const { series, src, dest } = require('gulp');
+const { series, src, dest, parallel } = require('gulp');
 const rimraf = require('rimraf');
 const babel = require('gulp-babel');
 const ts = require('gulp-typescript');
 const tsProject = ts.createProject('tsconfig.json');
 const merge = require('merge2');
+
 /**
- * @param {()=>{}} cb 回调
+ * 清除构建目录
+ *
+ * @returns {Promise}
  */
-function clean(cb) {
-    rimraf('lib', cb);
+function clean() {
+    return new Promise((resolve) => rimraf('lib', resolve));
 }
 /**
- * @param {()=>{}} cb 回调
+ * 构建
+ *
+ * @returns {import('node:stream').Stream}
  */
-function build(cb) {
+function build() {
     const tsResult = src('src/**/*.[tj]s')
         .pipe(tsProject());
 
-    merge([
+    return merge([
         tsResult.dts.pipe(dest('lib/types')),
         tsResult.js.pipe(babel()).pipe(dest('lib')),
     ]);
-    cb();
 }
 
 /**
- * @param {()=>{}} cb 回调
+ * 复制无法构建的文件
+ *
+ * @returns {import('node:stream').Stream}
  */
-function cp(cb) {
-    src('src/**/*.!([tj]s)').pipe(dest('lib'));
-    cb();
+function cp() {
+    return src('src/**/*.!([tj]s)').pipe(dest('lib'));
 }
 
-const doit = series(clean, build, cp);
-doit();
-exports.default = doit;
+exports.default = series(clean, parallel(build, cp));
