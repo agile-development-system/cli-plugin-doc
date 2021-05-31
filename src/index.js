@@ -228,22 +228,22 @@ function execPromise(command) {
  * 默认模板所支持的`helpers`属性
  *
  * @typedef {Object} DefaultHelpers
- * @property {string} installCode 安装脚本，bash脚本，默认为`\`npm i ${pkg.name}\``，如不符合要求，可以通过此字段自行修改
- * @property {boolean} devInstall 是否是作为开发依赖下载，`true`时，默认下载代码自动拼接npm `-D` 参数
- * @property {string} importCode 引入代码示例，js字符串
- * @property {string} exportCode 导出代码，js字符串
- * @property {string[]} cliUsages cli命令行使用帮助文档，格式类似`ads-doc -h`的输出内容
- * @property {string} remark 文档备注信息，md字符串
- * @property {GenDoc.renderCode} renderCode 将`GenDoc.getFileCodes`的返回值渲染成对应的代码段
- * @property {Postfix[]} postfixes 后缀内容数组
+ * @property {string} [installCode] 安装脚本，bash脚本，默认为`\`npm i ${pkg.name}\``，如不符合要求，可以通过此字段自行修改
+ * @property {boolean} [devInstall] 是否是作为开发依赖下载，`true`时，默认下载代码自动拼接npm `-D` 参数
+ * @property {string} [importCode] 引入代码示例，js字符串
+ * @property {string} [exportCode] 导出代码，js字符串
+ * @property {string[]} [cliUsages] cli命令行使用帮助文档，格式类似`ads-doc -h`的输出内容
+ * @property {string} [remark] 文档备注信息，md字符串
+ * @property {GenDoc.renderCode} [renderCode] 将`GenDoc.getFileCodes`的返回值渲染成对应的代码段
+ * @property {Postfix[]} [postfixes] 后缀内容数组
  */
 
 /**
  * 后缀内容类型
  *
  * @typedef {Object} Postfix
- * @property {string} id 锚点的名称，填写之后可以支持 `href=\`#${id}\``锚点定位
- * @property {string} title 内容的标题
- * @property {string} desc 内容的描述
- * @property {string} content 内容的正文
+ * @property {string} [id] 锚点的名称，填写之后可以支持 `href=\`#${id}\``锚点定位
+ * @property {string} [title] 内容的标题
+ * @property {string} [desc] 内容的描述
+ * @property {string} [content] 内容的正文
  */
