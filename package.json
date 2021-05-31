@@ -1,6 +1,6 @@
 {
   "name": "@ads/cli-plugin-doc",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "通用注释转markdown文档生成器,目标是支持所有类型的文件",
   "bin": {
     "ads-doc": "lib/bin/doc.js"
@@ -11,8 +11,8 @@
     "build": "gulp",
     "test": "jest",
     "docs": "node lib/bin/doc.js",
-    "prebuild":"npm run test",
-    "postbuild":"npm run docs",
+    "prebuild": "npm run test",
+    "postbuild": "npm run docs",
     "prepublishOnly": "npm run build"
   },
   "ads": {
