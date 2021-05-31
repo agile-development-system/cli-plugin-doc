@@ -1,6 +1,6 @@
 
 # @ads/cli-plugin-doc
-**版本** ：1.0.4
+**版本** ：1.0.5
 通用注释转markdown文档生成器,目标是支持所有类型的文件
 
 ## 快速开始
@@ -32,7 +32,7 @@ Options:
 注意：每个包含通配符的路径都需要用引号包裹，否则会被系统提前解析导致意料之外的错误
 
 文档查看：https://gitee.com/agile-development-system/cli-plugin-doc
-@ads/cli-plugin-doc@1.0.4 /Users/jinyang/code/ads/cli-plugin-doc
+@ads/cli-plugin-doc@1.0.5 /Users/jinyang/code/ads/cli-plugin-doc
 
 ```
 
