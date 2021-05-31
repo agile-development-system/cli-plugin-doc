@@ -11,7 +11,9 @@
     "build": "gulp",
     "test": "jest",
     "docs": "node lib/bin/doc.js",
-    "prepublishOnly": "npm run test && npm run build && chmod -R 750 lib && npm link && npm run docs"
+    "prebuild":"npm run test",
+    "postbuild":"npm run docs",
+    "prepublishOnly": "npm run build"
   },
   "ads": {
     "config": "lib/ads.cli.config.js"

@@ -7,7 +7,7 @@
 
 ### 安装
 ```bash
--D 
+npm i -D @ads/cli-plugin-doc
 ```
 
 ### 命令行使用文档
@@ -180,13 +180,14 @@ const GenDoc = require('@ads/cli-plugin-doc');
 
 | 属性 | 类型 | 描述 |
 | --- | --- | --- |
-| installCode | <code>string</code> | 安装脚本，bash脚本 |
-| importCode | <code>string</code> | 引入代码示例，js字符串 |
-| exportCode | <code>string</code> | 导出代码，js字符串 |
-| cliUsages | <code>Array.&lt;string&gt;</code> | cli命令行使用帮助文档，格式类似`ads-doc -h`的输出内容 |
-| remark | <code>string</code> | 文档备注信息，md字符串 |
-| renderCode | [<code>renderCode</code>](#GenDoc.renderCode) | 将`GenDoc.getFileCodes`的返回值渲染成对应的代码段 |
-| postfixes | [<code>Array.&lt;Postfix&gt;</code>](#Postfix) | 后缀内容数组 |
+| [installCode] | <code>string</code> | 安装脚本，bash脚本，默认为`npm i ${pkg.name}`，如不符合要求，可以通过此字段自行修改 |
+| [devInstall] | <code>boolean</code> | 是否是作为开发依赖下载，`true`时，默认下载代码自动拼接npm `-D` 参数 |
+| [importCode] | <code>string</code> | 引入代码示例，js字符串 |
+| [exportCode] | <code>string</code> | 导出代码，js字符串 |
+| [cliUsages] | <code>Array.&lt;string&gt;</code> | cli命令行使用帮助文档，格式类似`ads-doc -h`的输出内容 |
+| [remark] | <code>string</code> | 文档备注信息，md字符串 |
+| [renderCode] | [<code>renderCode</code>](#GenDoc.renderCode) | 将`GenDoc.getFileCodes`的返回值渲染成对应的代码段 |
+| [postfixes] | [<code>Array.&lt;Postfix&gt;</code>](#Postfix) | 后缀内容数组 |
 
 <a name="Postfix"></a>
 
@@ -198,10 +199,10 @@ const GenDoc = require('@ads/cli-plugin-doc');
 
 | 属性 | 类型 | 描述 |
 | --- | --- | --- |
-| id | <code>string</code> | 锚点的名称，填写之后可以支持 `href=\`#${id}\``锚点定位 |
-| title | <code>string</code> | 内容的标题 |
-| desc | <code>string</code> | 内容的描述 |
-| content | <code>string</code> | 内容的正文 |
+| [id] | <code>string</code> | 锚点的名称，填写之后可以支持 `href=\`#${id}\``锚点定位 |
+| [title] | <code>string</code> | 内容的标题 |
+| [desc] | <code>string</code> | 内容的描述 |
+| [content] | <code>string</code> | 内容的正文 |
 
 <a name="GetFilesCodeOptions"></a>
 
@@ -244,7 +245,7 @@ const {docs, codes, helpers, pkg} = locals
 
 ### 安装
 <%  %>```bash
-<%- helpers.installCode || 'npm i '+ helpers.devInstall? '-D ' : '' + pkg.name %>
+<%- helpers.installCode || 'npm i '+ (helpers.devInstall? '-D ' : '') + pkg.name %>
 <%  %>```<% if(helpers.importCode) { %>
 
 ### 引入

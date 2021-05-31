@@ -23,7 +23,7 @@ module.exports = (
             codesDir: './test/*',
             codesFiles: ['*.js'],
             helpers: {
-                installCode: 'npm i -D ' + pkg.name,
+                devInstall: true,
                 postfixes: [
                     {
                         id: 'defaultTemplate',

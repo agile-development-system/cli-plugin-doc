@@ -9,7 +9,7 @@ const {docs, codes, helpers, pkg} = locals
 
 ### 安装
 <%  %>```bash
-<%- helpers.installCode || 'npm i '+ helpers.devInstall? '-D ' : '' + pkg.name %>
+<%- helpers.installCode || 'npm i '+ (helpers.devInstall? '-D ' : '') + pkg.name %>
 <%  %>```<% if(helpers.importCode) { %>
 
 ### 引入

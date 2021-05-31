@@ -228,7 +228,7 @@ function execPromise(command) {
  * 默认模板所支持的`helpers`属性
  *
  * @typedef {Object} DefaultHelpers
- * @property {string} [installCode] 安装脚本，bash脚本，默认为`\`npm i ${pkg.name}\``，如不符合要求，可以通过此字段自行修改
+ * @property {string} [installCode] 安装脚本，bash脚本，默认为`npm i ${pkg.name}`，如不符合要求，可以通过此字段自行修改
  * @property {boolean} [devInstall] 是否是作为开发依赖下载，`true`时，默认下载代码自动拼接npm `-D` 参数
  * @property {string} [importCode] 引入代码示例，js字符串
  * @property {string} [exportCode] 导出代码，js字符串
