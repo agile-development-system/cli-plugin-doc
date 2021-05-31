@@ -1,13 +1,13 @@
 
 # @ads/cli-plugin-doc
-**版本** ：1.0.3
+**版本** ：1.0.4
 通用注释转markdown文档生成器,目标是支持所有类型的文件
 
 ## 快速开始
 
 ### 安装
 ```bash
-npm i @ads/cli-plugin-doc
+-D 
 ```
 
 ### 命令行使用文档
@@ -32,7 +32,7 @@ Options:
 注意：每个包含通配符的路径都需要用引号包裹，否则会被系统提前解析导致意料之外的错误
 
 文档查看：https://gitee.com/agile-development-system/cli-plugin-doc
-@ads/cli-plugin-doc@1.0.3 /Users/jinyang/code/ads/cli-plugin-doc
+@ads/cli-plugin-doc@1.0.4 /Users/jinyang/code/ads/cli-plugin-doc
 
 ```
 
@@ -48,7 +48,7 @@ Options:
 
 可以通过命令行参数`--no-default`或者node api的`options.default=false` 来禁止使用默认配置，默认配置相对比较通用，大部分情况不需要禁止，当默认配置和你的配置冲突时可以使用此选项
 
-配置文件导出类型为[👉`RenderOptions`](#RenderOptions),理论上支持所有的renderOption，由默认模板提供的`helpers`配置请看[👉默认模板](#defaultTemplate)
+配置文件导出类型为[👉`RenderOptions`](#RenderOptions),理论上支持所有的renderOption，由默认模板提供的`helpers`配置请看[👉默认模板支持的helpers](#DefaultHelpers)、[👉默认模板](#defaultTemplate)
 
 
 
@@ -244,7 +244,7 @@ const {docs, codes, helpers, pkg} = locals
 
 ### 安装
 <%  %>```bash
-<%- helpers.installCode || 'npm i ' + pkg.name %>
+<%- helpers.installCode || 'npm i '+ helpers.devInstall? '-D ' : '' + pkg.name %>
 <%  %>```<% if(helpers.importCode) { %>
 
 ### 引入
