@@ -4,6 +4,7 @@
  */
 
 const GenDoc = require('./lib/index');
+const pkg = require('./package.json');
 module.exports = (
     /**
      * 配置参数
@@ -22,6 +23,7 @@ module.exports = (
             codesDir: './test/*',
             codesFiles: ['*.js'],
             helpers: {
+                importCode: 'npm i -D ' + pkg.name,
                 postfixes: [
                     {
                         id: 'defaultTemplate',
@@ -31,7 +33,7 @@ module.exports = (
                     {
                         id: 'defaultConfig',
                         title: '默认文档渲染配置',
-                        desc: '当前`__dirname`为`@ads/cli-plugin-doc/lib/utils`',
+                        desc: '当前`__dirname`为`' + pkg.name + '/lib/utils`',
                         content: GenDoc.renderCode(defaultConfig),
                     },
                 ],
