@@ -12,7 +12,7 @@
     "test": "jest",
     "docs": "node lib/bin/doc.js",
     "prebuild": "npm run test",
-    "postbuild": "npm run docs",
+    "postbuild": "npm run docs && git add . && git commit -m \"docs(readme): 更新文档\"",
     "prepublishOnly": "npm run build"
   },
   "ads": {
