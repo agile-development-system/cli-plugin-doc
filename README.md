@@ -113,6 +113,17 @@ const GenDoc = require('@ads/cli-plugin-doc');
 函数为异步函数，注意不能作为ejs帮助函数传入，可以获取返回值后，将返回值作为helpers的变量传入
 
 **性质**: [<code>GenDoc</code>](#GenDoc)的静态方法
+<a name="GenDoc.getFileContent"></a>
+
+#### GenDoc.getFileContent(filename) ⇒ <code>string</code>
+读取文件内容
+
+**性质**: [<code>GenDoc</code>](#GenDoc)的静态方法
+
+| 参数 | 类型 | 描述 |
+| --- | --- | --- |
+| filename | <code>string</code> | 文件路径 |
+
 <a name="GenDoc.renderCode"></a>
 
 #### GenDoc.renderCode(codes, [extSort], [extTrans]) ⇒ <code>string</code>
