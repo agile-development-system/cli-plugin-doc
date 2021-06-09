@@ -1,6 +1,5 @@
-
 # @ads/cli-plugin-doc
-**版本** ：1.0.7
+**版本** ：1.0.8
 通用注释转markdown文档生成器,目标是支持所有类型的文件
 
 ## 快速开始
@@ -32,7 +31,7 @@ Options:
 注意：每个包含通配符的路径都需要用引号包裹，否则会被系统提前解析导致意料之外的错误
 
 文档查看：https://gitee.com/agile-development-system/cli-plugin-doc
-@ads/cli-plugin-doc@1.0.7 /Users/jinyang/code/ads/cli-plugin-doc
+@ads/cli-plugin-doc@1.0.8 /Users/jinyang/code/ads/cli-plugin-doc
 
 ```
 
@@ -54,6 +53,101 @@ Options:
 
 
 ## 代码演示
+```js
+
+const GenDoc = require('@ads/cli-plugin-doc');
+/**
+ * render配置生成
+ *
+ * @param {object} [options={}] 选项
+ * @param {boolean} [options.needDirError] 是否需要触发文件路径错误
+ * @param {boolean} [options.noFiles] 是否需要去除files选项
+ * @param {boolean} [options.noDefault] 是否取消default配置
+ * @param {boolean} [options.noCodes] 是否去除codes相关配置
+ * @returns {import('../../src/index').RenderOptions}
+ */
+module.exports = async ({ needDirError, noFiles, noDefault, noCodes } = {}) => {
+    const [template, defaultConfig, cliUsages] = (await Promise.all([
+        GenDoc.getFilesCode({ dir: './src/template', files: ['*'] }),
+        GenDoc.getFilesCode({ dir: './src/utils', files: ['config.js'] }),
+        GenDoc.getCliUsages(),
+    ]));
+    return {
+        files: noFiles ? null : ['./src/**/*.js'],
+        ...(noCodes
+            ? {}
+            : {
+                codesDir: needDirError ? './aaa' : './exa',
+                codesFiles: ['*'],
+            }
+        ),
+        config: './ads.doc.conf.js',
+        noDefault,
+        jsdocEngineOptions: noDefault && {
+            plugins: [
+                require.resolve('jsdoc-tsimport-plugin'),
+            ],
+        },
+        helpers: {
+            template,
+            defaultConfig,
+            cliUsages,
+        },
+    };
+};
+
+```
+```js
+const { expect, test } = require('@jest/globals');
+const GenDoc = require('@ads/cli-plugin-doc');
+const config = require('../__mock__/index');
+const path = require('path');
+test('GenDoc render', async () => {
+    const res = await GenDoc.render(await config());
+    expect(typeof res === 'string').toBe(true);
+});
+
+test('GenDoc render output & use ads.doc.config.js', async () => {
+    const res = await GenDoc.render({
+        output: path.resolve(__dirname, '../../.temp/README.md'),
+    });
+    expect(typeof res === 'undefined').toBe(true);
+});
+
+test('GenDoc render no files', async () => {
+    const res = await GenDoc.render(await config({ noFiles: true }));
+    expect(typeof res === 'string').toBe(true);
+});
+
+test('GenDoc render no codes', async () => {
+    const res = await GenDoc.render(await config({ noCodes: true }));
+    expect(typeof res === 'string').toBe(true);
+});
+
+test('GenDoc render error', async () => {
+    try {
+        await GenDoc.render(await config({ needDirError: true }));
+    } catch (error) {
+        expect(error.message).toMatch('未匹配到任何目录，请确认输入路径');
+    }
+});
+
+test('GenDoc getRenderData nodefault', async () => {
+    const res = await GenDoc.getRenderData(await config({ noDefault: true }));
+    expect(typeof res === 'object').toBe(true);
+});
+
+test('GenDoc getRenderData', async () => {
+    const res = await GenDoc.getRenderData(await config(), false);
+    expect(typeof res === 'object').toBe(true);
+});
+
+test('GenDoc getFileContent', () => {
+    const res = GenDoc.getFileContent('./README.md');
+    expect(typeof res === 'string').toBe(true);
+});
+
+```
 
 
 
@@ -122,7 +216,7 @@ const GenDoc = require('@ads/cli-plugin-doc');
 
 | 参数 | 类型 | 描述 |
 | --- | --- | --- |
-| filename | <code>string</code> | 文件路径 |
+| filename | <code>string</code> | 相对于运行目录的文件路径 |
 
 <a name="GenDoc.renderCode"></a>
 
@@ -170,7 +264,7 @@ const GenDoc = require('@ads/cli-plugin-doc');
 | [jsdoc2mdOptions] | [<code>Jsdoc2mdOptions</code>](#Jsdoc2mdOptions) |  | jsdocToMarkdown配置参数 |
 | [codesOptions] | [<code>GetFilesCodeOptions</code>](#GetFilesCodeOptions) |  | 获取源代码的文件路径配置参数 |
 | [jsdocEngineOptions] | <code>object</code> |  | jsdoc解析引擎的配置，实际上是`jsdoc.conf.js`的整合， 也可以使用  `RenderOptions.jsdoc2mdOptions.configure`字段来指定本地的jsdoc配置 配置选项[👉参考文档](https://jsdoc.app/about-configuring-jsdoc.html) |
-| [helpers] | <code>object</code> |  | 注入ejs模板的`helpers`对象，提供模板使用的帮助函数和变量 |
+| [helpers] | [<code>DefaultHelpers</code>](#DefaultHelpers) |  | 注入ejs模板的`helpers`对象，提供模板使用的帮助函数和变量，配合模板使用 |
 | [presets] | [<code>Array.&lt;RenderOptions&gt;</code>](#RenderOptions) |  | 基于preset机制实现配置支持预设的功能， 具体[👉参考文档](https://gitee.com/agile-development-system/node-utils#presetutilsgetdeeppresetmergeconfig--config)`PresetUtils.getDeepPresetMerge` |
 | [noDefault] | <code>boolean</code> |  | 取消合并默认配置 |
 | [modify] | <code>module:@ads/node-utils~ConfigModify</code> |  | 将默认配置和preset合并后生成的config再次处理的钩子 具体[👉参考文档](https://gitee.com/agile-development-system/node-utils#presetutilsgetdeeppresetmergeconfig--config) |
@@ -247,8 +341,7 @@ jsdocToMarkdown配置参数，具体可[👉参考文档](https://github.com/jsd
 ```ejs
 <%
 const {docs, codes, helpers, pkg} = locals
-%>
-# <%- pkg.name %>
+%># <%- pkg.name %>
 **版本** ：<%- pkg.version %>
 <%- pkg.description %>
 
@@ -341,7 +434,7 @@ const defaultConfig = {
             require.resolve('jsdoc-tsimport-plugin'),
         ],
     },
-    helper: {
+    helpers: {
         renderCode,
     },
 };
