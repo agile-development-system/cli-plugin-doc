@@ -41,3 +41,8 @@ test('GenDoc getRenderData', async () => {
     const res = await GenDoc.getRenderData(await config(), false);
     expect(typeof res === 'object').toBe(true);
 });
+
+test('GenDoc getFileContent', () => {
+    const res = GenDoc.getFileContent('./README.md');
+    expect(typeof res === 'string').toBe(true);
+});

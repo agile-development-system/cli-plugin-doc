@@ -1,17 +1,4 @@
 {
-    // 编译选项
-    "compilerOptions": {
-        "allowJs": true,
-        "declaration": true,
-        "declarationDir": "lib/types",
-        "outDir": "lib",
-        "target": "ESNext",
-        "module": "commonjs",
-        "moduleResolution":"node",
-        "allowSyntheticDefaultImports": true,
-        "experimentalDecorators": true,
-        "esModuleInterop": true,
-        "emitDecoratorMetadata": true
-    },
+    "extends":"@ads/ts-config-js",
     "include": ["src"]
 }

@@ -122,6 +122,16 @@ class GenDoc {
             throw new Error('未检测到根目录下存在【package.json】文件');
         }
     }
+
+    /**
+     * 读取文件内容
+     *
+     * @param {string} filename 文件路径
+     * @returns {string}
+     */
+    static getFileContent(filename) {
+        return fs.readFileSync(FastPath.getCwdPath(filename), { encoding: 'utf-8' });
+    }
 };
 
 module.exports = GenDoc;
