@@ -1,6 +1,6 @@
 {
   "name": "@ads/cli-plugin-doc",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "通用注释转markdown文档生成器,目标是支持所有类型的文件",
   "bin": {
     "ads-doc": "lib/bin/doc.js"
