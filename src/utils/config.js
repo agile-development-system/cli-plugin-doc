@@ -16,7 +16,7 @@ const defaultConfig = {
             require.resolve('jsdoc-tsimport-plugin'),
         ],
     },
-    helper: {
+    helpers: {
         renderCode,
     },
 };

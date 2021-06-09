@@ -126,7 +126,7 @@ class GenDoc {
     /**
      * 读取文件内容
      *
-     * @param {string} filename 文件路径
+     * @param {string} filename 相对于运行目录的文件路径
      * @returns {string}
      */
     static getFileContent(filename) {
@@ -220,7 +220,7 @@ function execPromise(command) {
  * @property {object} [jsdocEngineOptions] jsdoc解析引擎的配置，实际上是`jsdoc.conf.js`的整合，
  * 也可以使用  `RenderOptions.jsdoc2mdOptions.configure`字段来指定本地的jsdoc配置
  * 配置选项[👉参考文档](https://jsdoc.app/about-configuring-jsdoc.html)
- * @property {object} [helpers] 注入ejs模板的`helpers`对象，提供模板使用的帮助函数和变量
+ * @property {DefaultHelpers} [helpers] 注入ejs模板的`helpers`对象，提供模板使用的帮助函数和变量，配合模板使用
  * @property {RenderOptions[]} [presets] 基于preset机制实现配置支持预设的功能，
  * 具体[👉参考文档](https://gitee.com/agile-development-system/node-utils#presetutilsgetdeeppresetmergeconfig--config)`PresetUtils.getDeepPresetMerge`
  * @property {boolean} [noDefault] 取消合并默认配置
