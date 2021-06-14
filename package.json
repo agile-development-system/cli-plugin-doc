@@ -11,12 +11,28 @@
     "build": "gulp",
     "test": "jest",
     "docs": "node lib/bin/doc.js",
-    "prebuild": "npm run test",
     "postbuild": "npm run docs && git add . && git commit -m \"docs(readme): 更新文档\"",
-    "prepublishOnly": "npm run build"
+    "prebuild": "npm run test",
+    "lint": "eslint --ext .js,.vue,.json,.md src",
+    "lint:fix": "eslint --ext .js,.vue,.json,.md src --fix",
+    "commit": "git add . && git commit --no-edit",
+    "postversion": "npm run changelog",
+    "prepublishOnly": "npm run docs && (git add . && git commit -m \"docs(readme): 更新文档\" || true)",
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
+    "postchangelog": "git add . && git commit -m \"docs(changelog): 更新CHANGELOG\" || true"
   },
   "ads": {
     "config": "lib/ads.cli.config.js"
+  },
+  "gitHooks": {
+    "pre-commit": "lint-staged",
+    "commit-msg": "commitlint -e $GIT_PARAMS",
+    "prepare-commit-msg": "ads-gc-has-msg && exec < /dev/tty && git cz --hook || true"
+  },
+  "lint-staged": {
+    "**/*.{js,json,md}": [
+      "eslint  --fix"
+    ]
   },
   "files": [
     "lib",
@@ -36,33 +52,24 @@
   "author": "junyang",
   "license": "MIT",
   "devDependencies": {
+    "@ads/babel-preset-base": "^1.0.0",
+    "@ads/cli-plugin-doc": "^1.0.8",
+    "@ads/eslint-config-js": "^1.0.5",
+    "@ads/gulp-config-preset": "^1.0.0",
+    "@ads/jest-config-node": "^1.0.3",
     "@ads/ts-config-js": "^1.0.2",
-    "@babel/core": "^7.13.15",
-    "@babel/eslint-parser": "^7.13.14",
-    "@babel/plugin-proposal-class-properties": "^7.13.0",
-    "@babel/plugin-proposal-decorators": "^7.13.15",
-    "@babel/plugin-proposal-nullish-coalescing-operator": "^7.13.8",
-    "@babel/plugin-proposal-optional-chaining": "^7.13.12",
-    "@babel/plugin-transform-modules-commonjs": "^7.13.8",
-    "@babel/preset-env": "^7.13.15",
+    "@commitlint/cli": "^12.1.1",
+    "@commitlint/config-conventional": "^12.1.1",
     "@types/ejs": "^3.0.6",
     "@types/fs-extra": "^9.0.11",
     "@types/jsdoc-to-markdown": "^7.0.0",
     "@types/node": "^14.14.41",
-    "eslint": "^7.24.0",
-    "eslint-config-standard": "^16.0.2",
-    "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-jsdoc": "^33.1.0",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^4.3.1",
-    "gulp": "^4.0.2",
-    "gulp-babel": "^8.0.0",
-    "gulp-cli": "^2.3.0",
-    "gulp-typescript": "^6.0.0-alpha.1",
-    "jest": "^26.6.3",
-    "merge2": "^1.4.1",
-    "rimraf": "^3.0.2",
-    "typescript": "^4.2.4"
+    "commitizen": "^4.2.3",
+    "conventional-changelog": "^3.1.24",
+    "conventional-changelog-cli": "^2.1.1",
+    "cz-conventional-changelog-zh": "^0.0.2",
+    "lint-staged": "^10.5.4",
+    "yorkie": "^2.0.0"
   },
   "dependencies": {
     "@ads/node-utils": "^1.0.10",
