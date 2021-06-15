@@ -3,5 +3,5 @@
  * @Create: 2021年04月12日
  */
 module.exports = {
-    presets: ['@ads/babel-preset-base'],
+    presets: ['@agds/babel-preset-base'],
 };

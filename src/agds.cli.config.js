@@ -3,12 +3,12 @@
  * @Create: 2021年05月16日
  */
 
-const { Notice } = require('@ads/node-utils');
+const { Notice } = require('@agds/node-utils');
 const { doc } = require('./plugin');
 module.exports = [
     {
         cmd: 'doc',
-        desc: 'ads敏捷开发系统doc文档生成器',
+        desc: 'agds系统doc文档生成器',
         action: doc,
         help: {
             after: [
@@ -27,7 +27,7 @@ module.exports = [
             {
                 opt: '-c,--config <config>',
                 desc: '配置文件路径，相对于cwd目录，仅支持js文件类型',
-                default: 'ads.doc.config.js',
+                default: 'agds.doc.config.js',
             },
             {
                 opt: '-t,--template <template>',

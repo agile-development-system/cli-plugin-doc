@@ -12,6 +12,7 @@ module.exports = (
      * @returns {import('./lib/types/index').RenderOptions}
      */
     async () => {
+        console.log('>>>>>>>>>>');
         const [template, defaultConfig, cliUsages] = (await Promise.all([
             GenDoc.getFilesCode({ dir: './src/template', files: ['*'] }),
             GenDoc.getFilesCode({ dir: './src/utils', files: ['config.js'] }),
@@ -40,7 +41,7 @@ module.exports = (
                 cliUsages,
                 remark: `### 配置文件
 
-默认为当前目录下的\`ads.doc.config.js\`，自动合并[默认配置](#defaultConfig)
+默认为当前目录下的\`agds.doc.config.js\`，自动合并[默认配置](#defaultConfig)
 
 可以通过命令行参数\`-c --config <config>\`或者node api的\`options.config\` 来指定配置文件名称
 

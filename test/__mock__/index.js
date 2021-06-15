@@ -1,5 +1,5 @@
 
-const GenDoc = require('@ads/cli-plugin-doc');
+const GenDoc = require('@agds/cli-plugin-doc');
 /**
  * render配置生成
  *
@@ -25,7 +25,7 @@ module.exports = async ({ needDirError, noFiles, noDefault, noCodes } = {}) => {
                 codesFiles: ['*'],
             }
         ),
-        config: './ads.doc.conf.js',
+        config: './agds.doc.conf.js',
         noDefault,
         jsdocEngineOptions: noDefault && {
             plugins: [

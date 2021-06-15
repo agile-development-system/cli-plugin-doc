@@ -4,7 +4,7 @@ const getFilesPath = require('./utils/getFilesPath');
 const defaultConfig = require('./utils/config');
 const path = require('path');
 const fs = require('fs-extra');
-const { FastFs, FastPath, PresetUtils } = require('@ads/node-utils');
+const { FastFs, FastPath, PresetUtils } = require('@agds/node-utils');
 const { exec } = require('child_process');
 const renderCode = require('./utils/renderCode');
 /**
@@ -12,7 +12,7 @@ const renderCode = require('./utils/renderCode');
  *
  * #### 引入
  * ```js
- * const GenDoc = require('@ads/cli-plugin-doc');
+ * const GenDoc = require('@agds/cli-plugin-doc');
  * ```
  *
  */
@@ -146,7 +146,7 @@ module.exports = GenDoc;
  */
 async function _mergeToDefaultConfig(options = {}) {
     // 获取用户本地配置文件
-    const cwdConfPath = FastPath.getCwdPath(options.config || 'ads.doc.config.js');
+    const cwdConfPath = FastPath.getCwdPath(options.config || 'agds.doc.config.js');
     options.presets = options.presets || [];
     if (FastFs.getPathStatSync(cwdConfPath)) {
         const userConfig = require(cwdConfPath);
@@ -213,7 +213,7 @@ function execPromise(command) {
  * @property {string} template ejs渲染的模板相对于cwd的路径或者绝对路径
  * @property {string} [codesDir] `codesOptions.dir`的别名
  * @property {string[]} [codesFiles] `codesOptions.codesFiles`的别名
- * @property {fs.PathLike} [conifg=ads.doc.config.js] 配置文件路径，默认为运行目录下的`ads.doc.config.js`,仅支持`js`文件类型
+ * @property {fs.PathLike} [conifg=agds.doc.config.js] 配置文件路径，默认为运行目录下的`agds.doc.config.js`,仅支持`js`文件类型
  * @property {boolean} [default] 是否合并默认配置，一般我们认为您是需要默认配置的，当默认配置和你的需求冲突时可以设置为`false`
  * @property {import('./utils/jsdocRender').Jsdoc2mdOptions} [jsdoc2mdOptions] jsdocToMarkdown配置参数
  * @property {import('./utils/getFilesPath').GetFilesCodeOptions} [codesOptions] 获取源代码的文件路径配置参数
@@ -224,7 +224,7 @@ function execPromise(command) {
  * @property {RenderOptions[]} [presets] 基于preset机制实现配置支持预设的功能，
  * 具体[👉参考文档](https://gitee.com/agile-development-system/node-utils#presetutilsgetdeeppresetmergeconfig--config)`PresetUtils.getDeepPresetMerge`
  * @property {boolean} [noDefault] 取消合并默认配置
- * @property {import('@ads/node-utils').ConfigModify} [modify] 将默认配置和preset合并后生成的config再次处理的钩子
+ * @property {import('@agds/node-utils').ConfigModify} [modify] 将默认配置和preset合并后生成的config再次处理的钩子
  * 具体[👉参考文档](https://gitee.com/agile-development-system/node-utils#presetutilsgetdeeppresetmergeconfig--config)
  */
 
@@ -242,7 +242,7 @@ function execPromise(command) {
  * @property {boolean} [devInstall] 是否是作为开发依赖下载，`true`时，默认下载代码自动拼接npm `-D` 参数
  * @property {string} [importCode] 引入代码示例，js字符串
  * @property {string} [exportCode] 导出代码，js字符串
- * @property {string[]} [cliUsages] cli命令行使用帮助文档，格式类似`ads-doc -h`的输出内容
+ * @property {string[]} [cliUsages] cli命令行使用帮助文档，格式类似`agds-doc -h`的输出内容
  * @property {string} [remark] 文档备注信息，md字符串
  * @property {GenDoc.renderCode} [renderCode] 将`GenDoc.getFileCodes`的返回值渲染成对应的代码段
  * @property {Postfix[]} [postfixes] 后缀内容数组

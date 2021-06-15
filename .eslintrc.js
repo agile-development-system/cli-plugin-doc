@@ -1,5 +1,5 @@
 module.exports = {
     extends: [
-        '@ads/js',
+        '@agds/js',
     ],
 };

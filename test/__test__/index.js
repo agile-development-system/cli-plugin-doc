@@ -1,5 +1,5 @@
 const { expect, test } = require('@jest/globals');
-const GenDoc = require('@ads/cli-plugin-doc');
+const GenDoc = require('@agds/cli-plugin-doc');
 const config = require('../__mock__/index');
 const path = require('path');
 test('GenDoc render', async () => {
@@ -7,7 +7,7 @@ test('GenDoc render', async () => {
     expect(typeof res === 'string').toBe(true);
 });
 
-test('GenDoc render output & use ads.doc.config.js', async () => {
+test('GenDoc render output & use agds.doc.config.js', async () => {
     const res = await GenDoc.render({
         output: path.resolve(__dirname, '../../.temp/README.md'),
     });

@@ -4,7 +4,7 @@
  */
 
 const FileSet = require('file-set');
-const { FastPath } = require('@ads/node-utils');
+const { FastPath } = require('@agds/node-utils');
 const path = require('path');
 /**
  * 基于glob的文件遍历函数，返回基于目录分类的二维数组

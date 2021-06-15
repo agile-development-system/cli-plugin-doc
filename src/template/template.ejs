@@ -8,11 +8,13 @@ const {docs, codes, helpers, pkg} = locals
 ## 快速开始
 
 ### 安装
+
 <%  %>```bash
 <%- helpers.installCode || 'npm i '+ (helpers.devInstall? '-D ' : '') + pkg.name %>
 <%  %>```<% if(helpers.importCode) { %>
 
 ### 引入
+
 <%  %>```js
 <%- helpers.importCode %>
 <%  %>```
@@ -25,6 +27,7 @@ const {docs, codes, helpers, pkg} = locals
 <% } %><% if(helpers.cliUsages&&helpers.cliUsages.length) { %>
 
 ### 命令行使用文档
+
 <% helpers.cliUsages.forEach(usage=>{ %>
 <%  %>```
 <%- usage %>
@@ -38,6 +41,7 @@ const {docs, codes, helpers, pkg} = locals
 <% } %><% if(codes&&codes.length) { %>
 
 ## 代码演示
+
 <%-
     helpers.renderCode
         &&helpers.renderCode(codes)
