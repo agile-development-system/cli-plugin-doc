@@ -1,5 +1,5 @@
 {
-  "extends": "/Users/jinyang/code/ads/cli-plugin-doc/node_modules/@agds/ts-config-js/lib/index.json",
+  "extends": "@agds/ts-config-js/tsconfig.json",
   "include": [
     "src"
   ]
