@@ -35,7 +35,7 @@ Options:
 注意：每个包含通配符的路径都需要用引号包裹，否则会被系统提前解析导致意料之外的错误
 
 文档查看：https://gitee.com/agile-development-system/cli-plugin-doc
-@agds/cli-plugin-doc@1.0.2 /Users/jinyang/code/ads/cli-plugin-doc/node_modules/@agds/cli-plugin-doc
+@agds/cli-plugin-doc@1.0.9 /Users/jinyang/code/ads/cli-plugin-doc/node_modules/@agds/cli-plugin-doc
 
 ```
 

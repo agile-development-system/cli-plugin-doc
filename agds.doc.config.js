@@ -12,7 +12,6 @@ module.exports = (
      * @returns {import('./lib/types/index').RenderOptions}
      */
     async () => {
-        console.log('>>>>>>>>>>');
         const [template, defaultConfig, cliUsages] = (await Promise.all([
             GenDoc.getFilesCode({ dir: './src/template', files: ['*'] }),
             GenDoc.getFilesCode({ dir: './src/utils', files: ['config.js'] }),
