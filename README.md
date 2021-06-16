@@ -1,5 +1,6 @@
 # @agds/cli-plugin-doc
-**版本** ：1.0.2
+
+**版本** ：1.0.9
 
 通用注释转markdown文档生成器,目标是支持所有类型的文件
 
@@ -344,6 +345,7 @@ jsdocToMarkdown配置参数，具体可[👉参考文档](https://github.com/jsd
 <%
 const {docs, codes, helpers, pkg} = locals
 %># <%- pkg.name %>
+
 **版本** ：<%- pkg.version %>
 
 <%- pkg.description %>
