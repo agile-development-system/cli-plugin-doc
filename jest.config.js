@@ -5,4 +5,7 @@
 const { PresetUtils } = require('@agds/node-utils');
 module.exports = PresetUtils.getDeepPresetMergeAndModify({
     presets: [require('@agds/jest-config-node')()],
+    collectCoverageFrom: [
+        '!**/helpers/**',
+    ],
 });
