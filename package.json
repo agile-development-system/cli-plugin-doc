@@ -1,6 +1,6 @@
 {
   "name": "@agds/cli-plugin-doc",
-  "version": "1.0.2",
+  "version": "1.0.8",
   "description": "通用注释转markdown文档生成器,目标是支持所有类型的文件",
   "bin": {
     "agds-doc": "lib/bin/doc.js"
@@ -11,11 +11,12 @@
     "build": "gulp",
     "test": "jest",
     "docs": "node lib/bin/doc.js",
-    "postbuild": "npm run docs && git add . && git commit -m \"docs(readme): 更新文档\"",
-    "lint": "eslint --ext .js,.vue,.json,.md src",
-    "lint:fix": "eslint --ext .js,.vue,.json,.md src --fix",
+    "docs:postbuild": "npm run docs && (git add . && git commit -m \"docs(readme): 更新文档\" || true)",
+    "lint": "eslint --ext .js,.json,.md src",
+    "lint:fix": "eslint --ext .js,.json,.md src --fix",
     "commit": "git add . && git commit --no-edit",
     "postversion": "npm run changelog",
+    "prepublishOnly": "npm run test && npm run build && npm run docs:postbuild",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
     "postchangelog": "git add . && git commit -m \"docs(changelog): 更新CHANGELOG\" || true"
   },
