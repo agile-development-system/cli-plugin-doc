@@ -252,7 +252,7 @@ function execPromise(command) {
  * 后缀内容类型
  *
  * @typedef {Object} Postfix
- * @property {string} [id] 锚点的名称，填写之后可以支持 `href=\`#${id}\``锚点定位
+ * @property {string} [id] 锚点的名称，填写之后可以支持 `href="#${id}"`锚点定位
  * @property {string} [title] 内容的标题
  * @property {string} [desc] 内容的描述
  * @property {string} [content] 内容的正文

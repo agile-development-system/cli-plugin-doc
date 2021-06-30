@@ -307,7 +307,7 @@ const GenDoc = require('@agds/cli-plugin-doc');
 
 | 属性 | 类型 | 描述 |
 | --- | --- | --- |
-| [id] | <code>string</code> | 锚点的名称，填写之后可以支持 `href=\`#${id}\``锚点定位 |
+| [id] | <code>string</code> | 锚点的名称，填写之后可以支持 `href="#${id}"`锚点定位 |
 | [title] | <code>string</code> | 内容的标题 |
 | [desc] | <code>string</code> | 内容的描述 |
 | [content] | <code>string</code> | 内容的正文 |
