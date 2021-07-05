@@ -246,6 +246,7 @@ function execPromise(command) {
  * @property {string} [remark] 文档备注信息，md字符串
  * @property {GenDoc.renderCode} [renderCode] 将`GenDoc.getFileCodes`的返回值渲染成对应的代码段
  * @property {Postfix[]} [postfixes] 后缀内容数组
+ * @property {string} [logo] logo
  */
 
 /**

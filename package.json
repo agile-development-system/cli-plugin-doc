@@ -51,6 +51,7 @@
   "author": "junyang",
   "license": "MIT",
   "devDependencies": {
+    "@agds/agds-doc-preset": "^1.0.4",
     "@agds/babel-preset-base": "^1.0.0",
     "@agds/cli-plugin-doc": "^1.0.0",
     "@agds/eslint-config-js": "^1.0.0",

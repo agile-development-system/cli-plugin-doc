@@ -1,3 +1,6 @@
+<p align="center">
+    <img src="https://gitee.com/agile-development-system/agds-doc-preset/raw/master/lib/docs/logos/light/1.png" alt="logo" width="200px">
+</p>
 # @agds/cli-plugin-doc
 
 **版本** ：1.0.9
@@ -296,6 +299,7 @@ const GenDoc = require('@agds/cli-plugin-doc');
 | [remark] | <code>string</code> | 文档备注信息，md字符串 |
 | [renderCode] | [<code>renderCode</code>](#GenDoc.renderCode) | 将`GenDoc.getFileCodes`的返回值渲染成对应的代码段 |
 | [postfixes] | [<code>Array.&lt;Postfix&gt;</code>](#Postfix) | 后缀内容数组 |
+| [logo] | <code>string</code> | logo |
 
 <a name="Postfix"></a>
 
@@ -344,7 +348,10 @@ jsdocToMarkdown配置参数，具体可[👉参考文档](https://github.com/jsd
 ```ejs
 <%
 const {docs, codes, helpers, pkg} = locals
-%># <%- pkg.name %>
+%><% if(helpers.logo) { %><p align="center">
+    <img src="<%- helpers.logo %>" alt="logo">
+</p>
+<% } %># <%- pkg.name %>
 
 **版本** ：<%- pkg.version %>
 
@@ -451,5 +458,35 @@ const defaultConfig = {
 module.exports = defaultConfig;
 ```
 
+
+
+
+<a name="license"></a>
+
+
+## 许可证
+
+[MIT License](https://gitee.com/agile-development-system/cli-plugin-doc/blob/master/LICENSE)
+Copyright (c) 2021 锦阳
+
+
+
+<a name="donate"></a>
+
+
+## 请维护者喝杯咖啡
+
+<img src="https://gitee.com/agile-development-system/agds-doc-preset/raw/master/lib/docs/qrcode/alipay.jpeg" width="209px" >
+<img src="https://gitee.com/agile-development-system/agds-doc-preset/raw/master/lib/docs/qrcode/wechatpay.jpeg" width="237px" >
+
+
+
+
+<a name="dingtalk"></a>
+
+
+## 加入钉钉群讨论或加入开发
+
+<img src="https://gitee.com/agile-development-system/agds-doc-preset/raw/master/lib/docs/qrcode/dingtalk.jpeg" width="188px" >
 
 
