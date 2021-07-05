@@ -1,6 +1,9 @@
 <%
 const {docs, codes, helpers, pkg} = locals
-%># <%- pkg.name %>
+%><% if(helpers.logo) { %><p align="center">
+    <img src="<%- helpers.logo %>" alt="logo">
+</p>
+<% } %># <%- pkg.name %>
 
 **版本** ：<%- pkg.version %>
 

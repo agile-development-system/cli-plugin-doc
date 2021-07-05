@@ -5,6 +5,7 @@
 
 const GenDoc = require('./lib/index');
 const pkg = require('./package.json');
+const preset = require('@agds/agds-doc-preset');
 module.exports = (
     /**
      * 配置参数
@@ -22,6 +23,7 @@ module.exports = (
             files: ['./src/**/*.js'],
             codesDir: './test/*',
             codesFiles: ['*.js'],
+            presets: [preset],
             helpers: {
                 devInstall: true,
                 postfixes: [

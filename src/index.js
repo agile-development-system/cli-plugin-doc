@@ -246,13 +246,14 @@ function execPromise(command) {
  * @property {string} [remark] 文档备注信息，md字符串
  * @property {GenDoc.renderCode} [renderCode] 将`GenDoc.getFileCodes`的返回值渲染成对应的代码段
  * @property {Postfix[]} [postfixes] 后缀内容数组
+ * @property {string} [logo] logo
  */
 
 /**
  * 后缀内容类型
  *
  * @typedef {Object} Postfix
- * @property {string} [id] 锚点的名称，填写之后可以支持 `href=\`#${id}\``锚点定位
+ * @property {string} [id] 锚点的名称，填写之后可以支持 `href="#${id}"`锚点定位
  * @property {string} [title] 内容的标题
  * @property {string} [desc] 内容的描述
  * @property {string} [content] 内容的正文
