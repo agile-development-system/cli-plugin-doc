@@ -3,7 +3,18 @@ const {docs, codes, helpers, pkg} = locals
 %><% if(helpers.logo) { %><p align="center">
     <img src="<%- helpers.logo %>" alt="logo">
 </p>
-<% } %># <%- pkg.name %>
+
+<% } %># <%- pkg.name %><% if (helpers.badges && helpers.badges.length > 0) { %>
+
+<%-
+helpers.badges.map(item => {
+    let badge = `![${item.name}](${item.url})`;
+    if (item.link) {
+        badge = `[${badge}](${item.link})`;
+    }
+    return badge;
+}).join(' ');%>
+<% } %>
 
 **版本** ：<%- pkg.version %>
 
@@ -25,6 +36,7 @@ const {docs, codes, helpers, pkg} = locals
 <% } %><% if(helpers.exportCode) { %>
 
 ### 导出
+
 <%  %>```js
 <%- helpers.exportCode %>
 <%  %>```
@@ -54,12 +66,11 @@ const {docs, codes, helpers, pkg} = locals
 
 ## API文档
 <%- docs %>
-<% } %><% if(helpers.postfixes&&helpers.postfixes.length) { %> <!-- 渲染后缀内容  -->
+<% } %><% if(helpers.postfixes&&helpers.postfixes.length) { // 后缀内容%>
 <% helpers.postfixes.forEach(postfix=>{ %>
 <% if(postfix.id) { %>
 
-<a name="<%- postfix.id %>"></a>
-<% } %><% if(postfix.title) { %>
+<a name="<%- postfix.id %>"></a><% } %><% if(postfix.title) { %>
 
 ## <%- postfix.title %>
 <% } %><% if(postfix.desc) { %>

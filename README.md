@@ -1,6 +1,7 @@
 <p align="center">
-    <img src="https://gitee.com/agile-development-system/agds-doc-preset/raw/master/lib/docs/logos/light/1.png" alt="logo" width="200px">
+    <img src="https://gitee.com/agile-development-system/agds-doc-preset/raw/master/lib/docs/logos/light/1.png" alt="logo">
 </p>
+
 # @agds/cli-plugin-doc
 
 **版本** ：1.0.9
@@ -300,6 +301,21 @@ const GenDoc = require('@agds/cli-plugin-doc');
 | [renderCode] | [<code>renderCode</code>](#GenDoc.renderCode) | 将`GenDoc.getFileCodes`的返回值渲染成对应的代码段 |
 | [postfixes] | [<code>Array.&lt;Postfix&gt;</code>](#Postfix) | 后缀内容数组 |
 | [logo] | <code>string</code> | logo |
+| [bradges] | [<code>Array.&lt;Badge&gt;</code>](#Badge) | 徽标数组 |
+
+<a name="Badge"></a>
+
+### Badge : <code>Object</code>
+徽标对象
+
+**性质**: 类型声明
+**属性**
+
+| 属性 | 类型 | 描述 |
+| --- | --- | --- |
+| url | <code>string</code> | 图片链接 |
+| [name] | <code>string</code> | 图片名称 |
+| [link] | <code>string</code> | 跳转链接 |
 
 <a name="Postfix"></a>
 
@@ -336,12 +352,11 @@ jsdocToMarkdown配置参数，具体可[👉参考文档](https://github.com/jsd
 
 **性质**: 类型声明
 
- <!-- 渲染后缀内容  -->
+
 
 
 
 <a name="defaultTemplate"></a>
-
 
 ## 默认文档渲染模板
 
@@ -351,7 +366,18 @@ const {docs, codes, helpers, pkg} = locals
 %><% if(helpers.logo) { %><p align="center">
     <img src="<%- helpers.logo %>" alt="logo">
 </p>
-<% } %># <%- pkg.name %>
+
+<% } %># <%- pkg.name %><% if (helpers.badges && helpers.badges.length > 0) { %>
+
+<%-
+helpers.badges.map(item => {
+    let badge = `![${item.name}](${item.url})`;
+    if (item.link) {
+        badge = `[${badge}](${item.link})`;
+    }
+    return badge;
+}).join(' ');%>
+<% } %>
 
 **版本** ：<%- pkg.version %>
 
@@ -373,6 +399,7 @@ const {docs, codes, helpers, pkg} = locals
 <% } %><% if(helpers.exportCode) { %>
 
 ### 导出
+
 <%  %>```js
 <%- helpers.exportCode %>
 <%  %>```
@@ -402,12 +429,11 @@ const {docs, codes, helpers, pkg} = locals
 
 ## API文档
 <%- docs %>
-<% } %><% if(helpers.postfixes&&helpers.postfixes.length) { %> <!-- 渲染后缀内容  -->
+<% } %><% if(helpers.postfixes&&helpers.postfixes.length) { // 后缀内容%>
 <% helpers.postfixes.forEach(postfix=>{ %>
 <% if(postfix.id) { %>
 
-<a name="<%- postfix.id %>"></a>
-<% } %><% if(postfix.title) { %>
+<a name="<%- postfix.id %>"></a><% } %><% if(postfix.title) { %>
 
 ## <%- postfix.title %>
 <% } %><% if(postfix.desc) { %>
@@ -425,7 +451,6 @@ const {docs, codes, helpers, pkg} = locals
 
 
 <a name="defaultConfig"></a>
-
 
 ## 默认文档渲染配置
 
@@ -463,7 +488,6 @@ module.exports = defaultConfig;
 
 <a name="license"></a>
 
-
 ## 许可证
 
 [MIT License](https://gitee.com/agile-development-system/cli-plugin-doc/blob/master/LICENSE)
@@ -472,7 +496,6 @@ Copyright (c) 2021 锦阳
 
 
 <a name="donate"></a>
-
 
 ## 请维护者喝杯咖啡
 
@@ -483,7 +506,6 @@ Copyright (c) 2021 锦阳
 
 
 <a name="dingtalk"></a>
-
 
 ## 加入钉钉群讨论或加入开发
 

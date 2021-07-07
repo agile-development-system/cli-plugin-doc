@@ -247,6 +247,16 @@ function execPromise(command) {
  * @property {GenDoc.renderCode} [renderCode] 将`GenDoc.getFileCodes`的返回值渲染成对应的代码段
  * @property {Postfix[]} [postfixes] 后缀内容数组
  * @property {string} [logo] logo
+ * @property {Badge[]} [bradges] 徽标数组
+ */
+
+/**
+ * 徽标对象
+ *
+ * @typedef {Object} Badge
+ * @property {string} url 图片链接
+ * @property {string} [name] 图片名称
+ * @property {string} [link] 跳转链接
  */
 
 /**
