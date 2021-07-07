@@ -1,3 +1,13 @@
+## [1.0.10](https://gitee.com/agile-development-system/cli-plugin-doc/compare/v1.0.9...v1.0.10) (2021-07-07)
+
+
+### Features
+
+* **template:** 支持徽标图片,引入agds文档预设配置 ([8d57b3f](https://gitee.com/agile-development-system/cli-plugin-doc/commits/8d57b3fed72dbc7ff9a4c34ae1c4aa01dc3cb136))
+* 尝试提交coverage ([072fe9a](https://gitee.com/agile-development-system/cli-plugin-doc/commits/072fe9a4d21a26655ebc2d8422be60f643b9ac39))
+
+
+
 ## [1.0.9](https://gitee.com/agile-development-system/cli-plugin-doc/compare/v1.0.8...v1.0.9) (2021-06-16)
 
 
