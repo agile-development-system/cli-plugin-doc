@@ -51,9 +51,9 @@
   "author": "junyang",
   "license": "MIT",
   "devDependencies": {
-    "@agds/agds-doc-preset": "^1.0.5",
+    "@agds/agds-doc-preset": "^1.0.6",
     "@agds/babel-preset-base": "^1.0.0",
-    "@agds/cli-plugin-doc": "^1.0.0",
+    "@agds/cli-plugin-doc": "^1.0.10",
     "@agds/eslint-config-js": "^1.0.0",
     "@agds/gulp-config-preset": "^1.0.0",
     "@agds/jest-config-node": "^1.0.0",
