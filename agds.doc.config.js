@@ -19,13 +19,11 @@ module.exports = (
             GenDoc.getCliUsages(),
         ]));
         return {
-            output: 'README.md',
             files: ['./src/**/*.js'],
             codesDir: './test/*',
             codesFiles: ['*.js'],
             presets: [preset],
             helpers: {
-                devInstall: true,
                 postfixes: [
                     {
                         id: 'defaultTemplate',
